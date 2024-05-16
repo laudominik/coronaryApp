@@ -38,7 +38,7 @@ export default function StartReconstructionButton() {
             disabled={disabled} onClick={handleStart}>
             <Card.Header>
                 <div>
-                    <Button className='border-0 bg-transparent' onClick={handleStart} disabled={disabled}>
+                    <Button className='border-0 bg-transparent' disabled={disabled}>
                         <FontAwesomeIcon className="iconInCard" icon={faCube} />
                     </Button>
                 </div>
