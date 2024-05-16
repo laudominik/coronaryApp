@@ -41,7 +41,7 @@ export default function Viewport({ pcd }) {
             renderer.render(scene, camera);
         };
         animate();
-    }, []);
+    }, [pcd]);
 
     return (
         <section style={{ backgroundColor: '#ededed', padding: "1em 0 1em 0" }}>

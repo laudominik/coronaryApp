@@ -17,18 +17,18 @@ const prettyNames = {
 export default function ImageEntry({ ix }) {
     const [open, setOpen] = useState(false);
     const storeContext = useContext(StoreContext)
-    const xrays = useSyncExternalStore(storeContext.subscribe(), storeContext.get())
+    const xrays = useSyncExternalStore(storeContext.subscribe(), storeContext.getXRays())
     const current = xrays[ix]
 
     function handleRemove() {
-        storeContext.set(xrays.slice(0, ix).concat(xrays.slice(ix + 1)))
+        storeContext.setXRays(xrays.slice(0, ix).concat(xrays.slice(ix + 1)))
     }
 
     function handleChangeAcq(param_name, value) {
         let newXrays = [...xrays]
 
         newXrays[ix].acquisition_params[param_name] = value
-        storeContext.set(newXrays)
+        storeContext.setXRays(newXrays)
     }
 
     function handleImageChange(e) {
@@ -43,7 +43,7 @@ export default function ImageEntry({ ix }) {
             let newXrays = [...xrays]
             newXrays[ix].image = imageDataUrl;
             newXrays[ix].filename = file.name.split('.').slice(0, -1).join('.')
-            storeContext.set(newXrays)
+            storeContext.setXRays(newXrays)
         }
 
         reader.readAsDataURL(file);

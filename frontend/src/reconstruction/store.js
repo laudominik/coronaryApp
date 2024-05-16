@@ -1,4 +1,5 @@
 import { createContext } from "react";
+import * as THREE from 'three'
 import XRay from "./xray";
 
 class Store {
@@ -7,14 +8,23 @@ class Store {
         this.previewMouseLocked = false;
         this.listeners = [];
         this.xrays = [new XRay(), new XRay()]
+        this.vertices = []
     }
 
-    _get(ix) {
+    _getXRays() {
         return this.xrays
     }
 
-    get() {
-        return this._get.bind(this);
+    getXRays() {
+        return this._getXRays.bind(this)
+    }
+
+    _getVertices() {
+        return this.vertices
+    }
+
+    getVertices() {
+        return this._getVertices.bind(this)
     }
 
     subscribe() {
@@ -28,8 +38,13 @@ class Store {
         };
     }
 
-    set(newXrays) {
-        this.xrays = newXrays
+    setXRays(newXRays) {
+        this.xrays = newXRays
+        this.emit()
+    }
+
+    setVertices(newVertices) {
+        this.vertices = newVertices
         this.emit()
     }
 

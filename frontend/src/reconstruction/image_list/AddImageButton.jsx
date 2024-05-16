@@ -8,18 +8,24 @@ import XRay from '../xray';
 
 export default function AddImageButton() {
     const storeContext = useContext(StoreContext)
-    const xrays = useSyncExternalStore(storeContext.subscribe(), storeContext.get())
+    const xrays = useSyncExternalStore(storeContext.subscribe(), storeContext.getXRays())
 
     function handleAdd() {
-        storeContext.set([...xrays, new XRay()])
-        console.log(storeContext._get())
+        storeContext.setXRays([...xrays, new XRay()])
     }
 
     return (
-        <Card style={{ width: "100%", backgroundColor: 'red', margin: '1em' }}>
+        <Card style={{
+            width: "100%",
+            backgroundColor: 'red',
+            margin: '1em',
+            cursor: 'pointer'
+        }}
+            onClick={handleAdd}
+        >
             <Card.Header>
                 <div>
-                    <Button className='border-0 bg-transparent' onClick={handleAdd}>
+                    <Button className='border-0 bg-transparent' >
                         <FontAwesomeIcon className="iconInCard" icon={faPlus} />
                     </Button>
                 </div>

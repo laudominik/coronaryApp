@@ -5,7 +5,7 @@ import AddImageButton from "./AddImageButton";
 
 export default function ImageList() {
     const storeContext = useContext(StoreContext)
-    const xrays = useSyncExternalStore(storeContext.subscribe(), storeContext.get())
+    const xrays = useSyncExternalStore(storeContext.subscribe(), storeContext.getXRays())
 
     return (
         <>
