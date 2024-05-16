@@ -11,13 +11,15 @@ def reconstruction_worker(request):
 
     # TODO: get reconstruction params and validate them
     # TODO: call reconstruction
-    print("[RECONSTRUCTION] done")
+    print("[RECONSTRUCTION] pending...")
+
     pts = reconstruction([])
     flattened = []
     for pt in pts:
         flattened.append(pt[0])
         flattened.append(pt[1])
         flattened.append(pt[2])
+    print("[RECONSTRUCTION] done")
 
     return JsonResponse({"array": flattened})
 
