@@ -1,13 +1,17 @@
 import { useContext, useState, useSyncExternalStore } from 'react';
 import { Button, Card } from 'react-bootstrap';
-import { XRaysStoreContext } from '../store';
+import { ReconstructionErrorStoreContext, VerticesStoreContext, XRaysStoreContext } from '../store';
 import { faCube } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
 export default function StartReconstructionButton() {
+    const verticesContext = useContext(VerticesStoreContext)
+    const vertices = useSyncExternalStore(verticesContext.subscribe(), verticesContext.get())
     const xraysContext = useContext(XRaysStoreContext)
-    const xrays = useSyncExternalStore(xraysContext.subscribe(), xraysContext.get())
+    const _ = useSyncExternalStore(xraysContext.subscribe(), xraysContext.get())
+    const errorContext = useContext(ReconstructionErrorStoreContext)
+    const error = useSyncExternalStore(errorContext.subscribe(), errorContext.get())
 
     const [disabled, setDisabled] = useState(false)
 
@@ -16,16 +20,27 @@ export default function StartReconstructionButton() {
         setDisabled(true)
         const responseAsync = fetch("http://127.0.0.1:8000", {
             method: 'POST',
-            body: "abcdefghij",
+            body: xraysContext.serialized(),
             headers: {
                 'Content-Type': 'text/plain',
             }
         },
         )
-        const response = await responseAsync
-        const jso = await response.json()
-        xraysContext.set(jso.array)
-        setDisabled(false)
+        try {
+            const response = await responseAsync
+            const jso = await response.json()
+
+            if (jso.status == 0) {
+                verticesContext.set(jso.array)
+                errorContext.set("")
+            } else {
+                errorContext.set(jso.msg)
+            }
+        } catch (e) {
+            errorContext.set("backend error")
+        } finally {
+            setDisabled(false)
+        }
     }
 
     return (

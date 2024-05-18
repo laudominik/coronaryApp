@@ -4,10 +4,17 @@ import XRay from "./xray";
 
 
 class Store {
-    constructor(initial_value) {
-        // TODO: deserialize
-        this.stored = initial_value
+    constructor(initialValue, webStorageName = "") {
+        this.stored = initialValue
+        this.webStorageName = webStorageName
         this.listeners = []
+
+        // deserialization
+        if (this.webStorageName == "") return;
+        const storedStr = sessionStorage.getItem(this.webStorageName)
+        if (!storedStr) return;
+        const stored = JSON.parse(storedStr)
+        this.stored = stored
     }
 
     _get() {
@@ -16,6 +23,10 @@ class Store {
 
     get() {
         return this._get.bind(this)
+    }
+
+    serialized() {
+        return JSON.stringify(this.stored)
     }
 
     subscribe() {
@@ -32,6 +43,8 @@ class Store {
     set(newStored) {
         this.stored = newStored
         this.emit()
+        if (this.webStorageName == "") return
+        sessionStorage.setItem(this.webStorageName, this.serialized())
     }
 
     emit() {
@@ -40,6 +53,7 @@ class Store {
 
 };
 
-const XRaysStoreContext = createContext(new Store([new XRay(), new XRay()]))
-const VerticesStoreContext = createContext(new Store())
-export { XRaysStoreContext, VerticesStoreContext }
+const XRaysStoreContext = createContext(new Store([new XRay(), new XRay()], "xrays"))
+const VerticesStoreContext = createContext(new Store([], "vertices"))
+const ReconstructionErrorStoreContext = createContext(new Store(""))
+export { XRaysStoreContext, VerticesStoreContext, ReconstructionErrorStoreContext }

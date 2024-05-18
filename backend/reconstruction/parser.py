@@ -5,7 +5,7 @@ import numpy as np
 
 from PIL import Image
 
-from reconstruction.algos.XRayInfo import XRayInfo
+from xray_angio_3d import XRayInfo
 
 
 GENERIC_MSG = "issue with reconstruction input"

@@ -1,7 +1,7 @@
 import random
 import time
 
-from reconstruction.algos.XRayInfo import XRayInfo
+from .XRayInfo import XRayInfo
 
 
 def reconstruction(xrays: [XRayInfo]):

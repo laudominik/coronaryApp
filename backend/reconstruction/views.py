@@ -2,7 +2,7 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt # Allow request without csrf_token set
 from rest_framework.decorators import api_view
 
-from reconstruction.algos.reconstruction import reconstruction
+from xray_angio_3d import reconstruction
 from reconstruction.parser import parse
 
 
