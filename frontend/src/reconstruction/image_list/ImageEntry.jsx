@@ -2,7 +2,7 @@ import { useContext, useState, useSyncExternalStore } from 'react';
 import { Button, Card, Form, Collapse } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp, faMinus } from '@fortawesome/free-solid-svg-icons';
-import { StoreContext } from '../store';
+import { XRaysStoreContext } from '../store';
 
 const prettyNames = {
     'sid': 'Source-image distance',
@@ -16,19 +16,19 @@ const prettyNames = {
 
 export default function ImageEntry({ ix }) {
     const [open, setOpen] = useState(false);
-    const storeContext = useContext(StoreContext)
-    const xrays = useSyncExternalStore(storeContext.subscribe(), storeContext.getXRays())
+    const xraysContext = useContext(XRaysStoreContext)
+    const xrays = useSyncExternalStore(xraysContext.subscribe(), xraysContext.get())
     const current = xrays[ix]
 
     function handleRemove() {
-        storeContext.setXRays(xrays.slice(0, ix).concat(xrays.slice(ix + 1)))
+        xraysContext.set(xrays.slice(0, ix).concat(xrays.slice(ix + 1)))
     }
 
     function handleChangeAcq(param_name, value) {
         let newXrays = [...xrays]
 
         newXrays[ix].acquisition_params[param_name] = value
-        storeContext.setXRays(newXrays)
+        xraysContext.set(newXrays)
     }
 
     function handleImageChange(e) {
@@ -43,7 +43,7 @@ export default function ImageEntry({ ix }) {
             let newXrays = [...xrays]
             newXrays[ix].image = imageDataUrl;
             newXrays[ix].filename = file.name.split('.').slice(0, -1).join('.')
-            storeContext.setXRays(newXrays)
+            xraysContext.set(newXrays)
         }
 
         reader.readAsDataURL(file);

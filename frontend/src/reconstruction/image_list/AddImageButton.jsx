@@ -2,16 +2,16 @@ import { useContext, useState, useSyncExternalStore } from 'react';
 import { Button, Card, Form, Collapse } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faChevronUp } from '@fortawesome/free-solid-svg-icons';
-import { StoreContext } from '../store';
+import { XRaysStoreContext } from '../store';
 import XRay from '../xray';
 
 
 export default function AddImageButton() {
-    const storeContext = useContext(StoreContext)
-    const xrays = useSyncExternalStore(storeContext.subscribe(), storeContext.getXRays())
+    const xraysContext = useContext(XRaysStoreContext)
+    const xrays = useSyncExternalStore(xraysContext.subscribe(), xraysContext.get())
 
     function handleAdd() {
-        storeContext.setXRays([...xrays, new XRay()])
+        xraysContext.set([...xrays, new XRay()])
     }
 
     return (

@@ -9,7 +9,6 @@ def reconstruction(xrays: [XRayInfo]):
     :param xrays: x ray images to run reconstruction on
     '''
 
-    time.sleep(5)
     pts = []
 
     for i in range(30000):

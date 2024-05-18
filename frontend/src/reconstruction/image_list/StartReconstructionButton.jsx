@@ -1,13 +1,13 @@
 import { useContext, useState, useSyncExternalStore } from 'react';
 import { Button, Card } from 'react-bootstrap';
-import { StoreContext } from '../store';
+import { XRaysStoreContext } from '../store';
 import { faCube } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
 export default function StartReconstructionButton() {
-    const storeContext = useContext(StoreContext)
-    const xrays = useSyncExternalStore(storeContext.subscribe(), storeContext.getXRays())
+    const xraysContext = useContext(XRaysStoreContext)
+    const xrays = useSyncExternalStore(xraysContext.subscribe(), xraysContext.get())
 
     const [disabled, setDisabled] = useState(false)
 
@@ -24,7 +24,7 @@ export default function StartReconstructionButton() {
         )
         const response = await responseAsync
         const jso = await response.json()
-        storeContext.setVertices(jso.array)
+        xraysContext.set(jso.array)
         setDisabled(false)
     }
 

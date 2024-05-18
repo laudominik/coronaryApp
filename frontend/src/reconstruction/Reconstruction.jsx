@@ -5,11 +5,11 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { useContext, useEffect, useState, useSyncExternalStore } from 'react';
 import AddImageButton from './image_list/AddImageButton';
 import StartReconstructionButton from './image_list/StartReconstructionButton';
-import { StoreContext } from './store';
+import { VerticesStoreContext } from './store';
 
 export default function Reconstruction() {
-    const storeContext = useContext(StoreContext)
-    const vertices = useSyncExternalStore(storeContext.subscribe(), storeContext.getVertices())
+    const verticesContext = useContext(VerticesStoreContext)
+    const vertices = useSyncExternalStore(verticesContext.subscribe(), verticesContext.get())
 
     return (
         <main>

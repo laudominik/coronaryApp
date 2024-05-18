@@ -2,29 +2,20 @@ import { createContext } from "react";
 import * as THREE from 'three'
 import XRay from "./xray";
 
+
 class Store {
-    constructor() {
+    constructor(initial_value) {
         // TODO: deserialize
-        this.previewMouseLocked = false;
-        this.listeners = [];
-        this.xrays = [new XRay(), new XRay()]
-        this.vertices = []
+        this.stored = initial_value
+        this.listeners = []
     }
 
-    _getXRays() {
-        return this.xrays
+    _get() {
+        return this.stored
     }
 
-    getXRays() {
-        return this._getXRays.bind(this)
-    }
-
-    _getVertices() {
-        return this.vertices
-    }
-
-    getVertices() {
-        return this._getVertices.bind(this)
+    get() {
+        return this._get.bind(this)
     }
 
     subscribe() {
@@ -38,22 +29,17 @@ class Store {
         };
     }
 
-    setXRays(newXRays) {
-        this.xrays = newXRays
-        this.emit()
-    }
-
-    setVertices(newVertices) {
-        this.vertices = newVertices
+    set(newStored) {
+        this.stored = newStored
         this.emit()
     }
 
     emit() {
         this.listeners.forEach(f => f());
-        // TODO: serialize
     }
 
 };
 
-const StoreContext = createContext(new Store())
-export { StoreContext }
+const XRaysStoreContext = createContext(new Store([new XRay(), new XRay()]))
+const VerticesStoreContext = createContext(new Store())
+export { XRaysStoreContext, VerticesStoreContext }

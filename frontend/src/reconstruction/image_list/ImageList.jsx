@@ -1,11 +1,11 @@
 import { useContext, useSyncExternalStore } from "react";
 import ImageEntry from "./ImageEntry";
-import { StoreContext } from "../store";
+import { XRaysStoreContext } from "../store";
 import AddImageButton from "./AddImageButton";
 
 export default function ImageList() {
-    const storeContext = useContext(StoreContext)
-    const xrays = useSyncExternalStore(storeContext.subscribe(), storeContext.getXRays())
+    const xraysContext = useContext(XRaysStoreContext)
+    const xrays = useSyncExternalStore(xraysContext.subscribe(), xraysContext.get())
 
     return (
         <>
