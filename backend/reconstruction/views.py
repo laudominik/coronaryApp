@@ -1,19 +1,24 @@
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt # Allow request without csrf_token set
 from rest_framework.decorators import api_view
+
 from reconstruction.algos.reconstruction import reconstruction
+from reconstruction.parser import parse
 
 
 @api_view(['POST']) 
 def reconstruction_worker(request):
     if request.method != 'POST':
-        return HttpResponse(status=404)
+        return JsonResponse({"status": fail, "reason": "wrong method"})
 
     # TODO: get reconstruction params and validate them
-    # TODO: call reconstruction
-    print("[RECONSTRUCTION] pending...")
+    xrays, msg = parse(request.body)
+    # print(request.body)
+    if not xrays:
+        return JsonResponse({"status": 1, "msg": msg})
 
-    pts = reconstruction([])
+    print("[RECONSTRUCTION] pending...")
+    pts = reconstruction(xrays)
     flattened = []
     for pt in pts:
         flattened.append(pt[0])
@@ -21,7 +26,7 @@ def reconstruction_worker(request):
         flattened.append(pt[2])
     print("[RECONSTRUCTION] done")
 
-    return JsonResponse({"array": flattened})
+    return JsonResponse({"status": 0, "array": flattened})
 
 
 @api_view(['POST'])
