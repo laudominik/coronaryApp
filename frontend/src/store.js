@@ -1,9 +1,6 @@
-import { createContext } from "react";
-import * as THREE from 'three'
-import XRay from "./xray";
 
 
-class Store {
+export default class Store {
     constructor(initialValue, webStorageName = "") {
         this.stored = initialValue
         this.webStorageName = webStorageName
@@ -52,8 +49,3 @@ class Store {
     }
 
 };
-
-const XRaysStoreContext = createContext(new Store([new XRay(), new XRay()], "xrays"))
-const VerticesStoreContext = createContext(new Store([], "vertices"))
-const ReconstructionErrorStoreContext = createContext(new Store(""))
-export { XRaysStoreContext, VerticesStoreContext, ReconstructionErrorStoreContext }

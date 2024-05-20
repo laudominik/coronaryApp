@@ -3,11 +3,6 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { useEffect, useRef } from "react";
 
-
-
-
-
-
 export default function Viewport({ pcd }) {
     const refContainer = useRef(null);
 
@@ -45,6 +40,7 @@ export default function Viewport({ pcd }) {
 
     return (
         <section style={{ backgroundColor: '#ededed', padding: "1em 0 1em 0" }}>
+            <h3>3D point cloud reconstruction</h3>
             <div ref={refContainer} />
         </section>
     )

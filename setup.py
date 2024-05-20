@@ -8,7 +8,7 @@ def read(fname):
 setup(
     name = "xray-angio-3d",
     version = "0.0.1",
-    author = "Dominik Lau",
+    author = "Dominik Lau, Sławomir Adamowicz",
     description = ("Reconstruction of coronary arteries based on planary images"),
     packages = ['xray_angio_3d'],
     package_dir={'' : 'backend'},

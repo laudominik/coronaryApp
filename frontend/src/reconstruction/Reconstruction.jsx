@@ -5,7 +5,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { useContext, useEffect, useState, useSyncExternalStore } from 'react';
 import AddImageButton from './image_list/AddImageButton';
 import StartReconstructionButton from './image_list/StartReconstructionButton';
-import { ReconstructionErrorStoreContext, VerticesStoreContext } from './store';
+import { ReconstructionErrorStoreContext, VerticesStoreContext } from './reconstructionStore';
 
 export default function Reconstruction() {
     const verticesContext = useContext(VerticesStoreContext)

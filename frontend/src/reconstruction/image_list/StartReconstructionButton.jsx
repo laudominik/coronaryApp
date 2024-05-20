@@ -1,8 +1,10 @@
 import { useContext, useState, useSyncExternalStore } from 'react';
 import { Button, Card } from 'react-bootstrap';
-import { ReconstructionErrorStoreContext, VerticesStoreContext, XRaysStoreContext } from '../store';
+import { ReconstructionErrorStoreContext, VerticesStoreContext, XRaysStoreContext } from '../reconstructionStore';
 import { faCube } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import config from "../../config.json"
 
 
 export default function StartReconstructionButton() {
@@ -14,11 +16,11 @@ export default function StartReconstructionButton() {
     const error = useSyncExternalStore(errorContext.subscribe(), errorContext.get())
 
     const [disabled, setDisabled] = useState(false)
-
     async function handleStart() {
         if (disabled) return;
         setDisabled(true)
-        const responseAsync = fetch("http://127.0.0.1:8000", {
+        const url = config["RECONSTRUCTION_ENDPOINT"]
+        const responseAsync = fetch(url, {
             method: 'POST',
             body: xraysContext.serialized(),
             headers: {

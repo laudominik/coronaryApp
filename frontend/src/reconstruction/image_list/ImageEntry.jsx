@@ -2,7 +2,7 @@ import { useContext, useState, useSyncExternalStore } from 'react';
 import { Button, Card, Form, Collapse } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp, faMinus } from '@fortawesome/free-solid-svg-icons';
-import { XRaysStoreContext } from '../store';
+import { XRaysStoreContext } from '../reconstructionStore';
 
 const prettyNames = {
     'sid': 'Source-image distance',
@@ -89,8 +89,6 @@ export default function ImageEntry({ ix }) {
                     </Form>
                 </Card.Body>
             </Collapse>
-
-
         </Card>
     );
 }
