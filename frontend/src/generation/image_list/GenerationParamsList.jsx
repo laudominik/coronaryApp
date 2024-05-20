@@ -59,7 +59,6 @@ export default function GenerationParamsList() {
                                             <th scope="col">Beta</th>
                                             <th scope="sid">SID</th>
                                             <th scope="sod">SOD</th>
-                                            <th scope="col"></th>
                                         </tr>
                                     </MDBTableHead>
                                     <MDBTableBody>
@@ -73,13 +72,6 @@ export default function GenerationParamsList() {
                                                 </center>
                                             </td>
                                         </tr>
-
-                                        {/* <th scope="row">-</th>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td></td>
-                                        <td>-</td>
-                                        <td>-</td> */}
                                     </MDBTableBody>
 
                                 </MDBTable>

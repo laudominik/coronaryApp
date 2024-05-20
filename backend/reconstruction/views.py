@@ -19,14 +19,24 @@ def reconstruction_worker(request):
 
     print("[RECONSTRUCTION] pending...")
     pts = reconstruction(xrays)
-    flattened = []
-    for pt in pts:
-        flattened.append(pt[0])
-        flattened.append(pt[1])
-        flattened.append(pt[2])
+
+    def flatten(pts):
+        flattened = []
+        for pt in pts:
+            flattened.append(pt[0])
+            flattened.append(pt[1])
+            flattened.append(pt[2])
+        return flattened
+    
     print("[RECONSTRUCTION] done")
 
-    return JsonResponse({"status": 0, "array": flattened})
+    return JsonResponse({
+        "status": 0, 
+        "vessel": flatten(pts['vessel']),
+        "centerlines": flatten(pts['centerlines']),
+        "shadows": flatten(pts['shadows']),
+        "sources": flatten(pts['sources'])
+        })
 
 
 @api_view(['POST'])

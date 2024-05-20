@@ -1,6 +1,6 @@
 import { useContext, useState, useSyncExternalStore } from 'react';
 import { Button, Card } from 'react-bootstrap';
-import { ReconstructionErrorStoreContext, VerticesStoreContext, XRaysStoreContext } from '../reconstructionStore';
+import { ReconstructionErrorStoreContext, VesselStoreContext, SourcesStoreContext, CenterlineStoreContext, ShadowsStoreContext, XRaysStoreContext } from '../reconstructionStore';
 import { faCube } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -8,8 +8,10 @@ import config from "../../config.json"
 
 
 export default function StartReconstructionButton() {
-    const verticesContext = useContext(VerticesStoreContext)
-    const vertices = useSyncExternalStore(verticesContext.subscribe(), verticesContext.get())
+    const vesselContext = useContext(VesselStoreContext)
+    const sourcesContext = useContext(SourcesStoreContext)
+    const centerlineContext = useContext(CenterlineStoreContext)
+    const shadowsContext = useContext(ShadowsStoreContext)
     const xraysContext = useContext(XRaysStoreContext)
     const _ = useSyncExternalStore(xraysContext.subscribe(), xraysContext.get())
     const errorContext = useContext(ReconstructionErrorStoreContext)
@@ -33,7 +35,10 @@ export default function StartReconstructionButton() {
             const jso = await response.json()
 
             if (jso.status == 0) {
-                verticesContext.set(jso.array)
+                vesselContext.set(jso.vessel)
+                shadowsContext.set(jso.shadows)
+                centerlineContext.set(jso.centerlines)
+                sourcesContext.set(jso.sources)
                 errorContext.set("")
             } else {
                 errorContext.set(jso.msg)

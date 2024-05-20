@@ -5,18 +5,17 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { useContext, useEffect, useState, useSyncExternalStore } from 'react';
 import AddImageButton from './image_list/AddImageButton';
 import StartReconstructionButton from './image_list/StartReconstructionButton';
-import { ReconstructionErrorStoreContext, VerticesStoreContext } from './reconstructionStore';
+import { ReconstructionErrorStoreContext } from './reconstructionStore';
 
 export default function Reconstruction() {
-    const verticesContext = useContext(VerticesStoreContext)
-    const vertices = useSyncExternalStore(verticesContext.subscribe(), verticesContext.get())
+
     const errorContext = useContext(ReconstructionErrorStoreContext)
     const error = useSyncExternalStore(errorContext.subscribe(), errorContext.get())
 
     return (
         <main>
             <center>
-                <Viewport pcd={vertices} />
+                <Viewport />
                 {
                     error == "" ? <></> :
                         <span style={{ color: 'red' }}> ERROR: {error} </span>
