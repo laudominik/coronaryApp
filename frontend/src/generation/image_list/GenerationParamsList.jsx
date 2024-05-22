@@ -45,7 +45,7 @@ export default function GenerationParamsList() {
             const jso = await response.json()
             if (jso.status == 0) {
                 errorContext.set("")
-                // TODO: parse generation result
+                const result = jso.xrays.map(el => JSON.parse(el))
             } else {
                 errorContext.set(jso.msg)
             }

@@ -1,12 +1,15 @@
 import numpy as np
+import  base64
+import json
 
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt # Allow request without csrf_token set
 from rest_framework.decorators import api_view
+from PIL import Image
+from io import BytesIO
 
 from xray_angio_3d import reconstruction
 from reconstruction.parser import parse_reconstruction_params, parse_generation_params
-
 from vessel_tree_generator.module import *
 
 
@@ -20,7 +23,7 @@ def reconstruction_worker(request):
     # print(request.body)
     if not xrays:
         return JsonResponse({"status": 1, "msg": msg})
-
+ 
     print("[RECONSTRUCTION] pending...")
     pts = reconstruction(xrays)
 
@@ -45,9 +48,6 @@ def reconstruction_worker(request):
 
 @api_view(['POST'])
 def generator_worker(request):
-    #random.seed(seed)
-
-    # TODO: parse request
     seed, xrays, msg = parse_generation_params(request.body)
 
     if not xrays:
@@ -65,11 +65,18 @@ def generator_worker(request):
     vessel = None
     while vessel is None:
         vessel, _, _ = generate_vessel_3d(rng, vessel_type, tree_path, True, False)
-    import matplotlib.pyplot as plt
-    for xray in xrays:
+
+    images = []
+    for i, xray in enumerate(xrays):
         image = make_projection(vessel, xray.alpha, xray.beta, xray.sod, xray.sid, (ImagerPixelSpacing, ImagerPixelSpacing))
-    
+        image = Image.fromarray(image)
+        buf = BytesIO()
+        image.save(buf, format='PNG')
+        img_str = base64.b64encode(buf.getvalue()).decode("utf-8")
+        xrays[i].image = f'data:image/png;base64,{img_str}'
+
     # return the generated images
     return JsonResponse({
-        "status": 0
+        "status": 0,
+        "xrays": [json.dumps(xray.__dict__) for xray in xrays]
         })

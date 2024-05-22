@@ -7,7 +7,6 @@ from PIL import Image
 
 from xray_angio_3d import XRayInfo
 
-
 GENERIC_MSG = "issue with reconstruction input"
 IMAGE_WRONG_SIZE_MSG = "one of the images has wrong size (should be grayscale)"
 IMAGE_MISSING_MSG = "one of the images missing"
@@ -17,7 +16,7 @@ def parse_reconstruction_params(body):
     return _parse(json.loads(body))
 
 def _parse(xrays, requires_image=True):
-    if xrays is None:
+    if xrays is None or len(xrays) == 0:
         return _fail(EMPTY_LIST)
 
     xinfs = []
@@ -59,6 +58,7 @@ def _parse(xrays, requires_image=True):
             return _fail(IMAGE_MISSING_MSG)
 
         imgb64 = xray['image']
+        print(imgb64[:100])
         if imgb64 is None:
             return _fail(IMAGE_MISSING_MSG)
         xinfo.image = _b64_to_numpy(imgb64)
@@ -73,7 +73,6 @@ def _parse(xrays, requires_image=True):
 def parse_generation_params(body):
     bdy = json.loads(body)
     xrays, msg =  _parse(bdy["xrays"], requires_image=False)
-    print(bdy["xrays"])
     return bdy['seed'], xrays, msg
 
 def _b64_to_numpy(b64):
