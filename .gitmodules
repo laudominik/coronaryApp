@@ -1,0 +1,3 @@
+[submodule "backend/vessel_tree_generator"]
+	path = backend/vessel_tree_generator
+	url = git@github.com:Roagen7/vessel_tree_generator.git

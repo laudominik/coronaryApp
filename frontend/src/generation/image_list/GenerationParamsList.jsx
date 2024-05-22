@@ -1,4 +1,4 @@
-import React, { useContext, useSyncExternalStore } from "react";
+import React, { useContext, useState, useSyncExternalStore } from "react";
 import {
     MDBBtn,
     MDBCard,
@@ -12,24 +12,60 @@ import {
     MDBTableHead,
 } from "mdb-react-ui-kit";
 import GenerationEntry from "./GenerationEntry";
-import { ParamsStoreContext } from "../generationStore";
+import { GenerationErrorStoreContext, ParamsStoreContext } from "../generationStore";
 import { Button, Form } from "react-bootstrap";
 
 import config from "../../config.json"
 import XRay from "../../xray";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import GenerationParams from "../generationParams";
 
 export default function GenerationParamsList() {
+    const [disabled, setDisabled] = useState(false)
     const paramsContext = useContext(ParamsStoreContext)
     const params = useSyncExternalStore(paramsContext.subscribe(), paramsContext.get())
+    const errorContext = useContext(GenerationErrorStoreContext)
+    const error = useSyncExternalStore(errorContext.subscribe(), errorContext.get())
 
-    function generate() {
-        // TODO: add a call to backend API, config["GENERATION_ENDPOINT"]
+    async function generate() {
+        if (disabled) return;
+        setDisabled(true)
+        const url = config["GENERATION_ENDPOINT"]
+        const responseAsync = fetch(url, {
+            method: 'POST',
+            body: paramsContext.serialized(),
+            headers: {
+                'Content-Type': 'text/plain',
+            }
+        },
+        )
+        try {
+            const response = await responseAsync
+            const jso = await response.json()
+            if (jso.status == 0) {
+                errorContext.set("")
+                // TODO: parse generation result
+            } else {
+                errorContext.set(jso.msg)
+            }
+        } catch (e) {
+            errorContext.set("backend error")
+        } finally {
+            setDisabled(false)
+        }
     }
 
+
     function addProjection() {
-        paramsContext.set([...params, new XRay()])
+        const newParams = structuredClone(params)
+        newParams.xrays = [...newParams.xrays, new XRay()]
+        paramsContext.set(newParams)
+    }
+
+    const buttonStyle = {
+        cursor: disabled ? 'wait' : 'pointer',
+        margin: 5
     }
 
     return (
@@ -40,7 +76,13 @@ export default function GenerationParamsList() {
                         <MDBCard className="rounded-3">
                             <MDBCardBody className="p-4">
                                 <h4 className="text-center my-3 pb-3">X-ray generation</h4>
-                                <Button variant="success" onclick={generate}>Generate</Button>
+                                {
+                                    error == "" ? <></> :
+                                        <span style={{ color: 'red' }}> ERROR: {error} </span>
+                                }
+                                <br />
+                                <Button variant="success" style={buttonStyle} onClick={generate}>Generate</Button>
+                                <Button variant="warning" style={buttonStyle} href="reconstruction">Load to reconstruction</Button>
                                 <Form>
                                     <Form.Group>
                                         <center>
@@ -63,7 +105,7 @@ export default function GenerationParamsList() {
                                     </MDBTableHead>
                                     <MDBTableBody>
                                         {
-                                            params.map((el, ix) => <GenerationEntry ix={ix} />)
+                                            params.xrays.map((el, ix) => <GenerationEntry ix={ix} />)
                                         }
                                         <tr>
                                             <td colSpan={6}>

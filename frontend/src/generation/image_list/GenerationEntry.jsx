@@ -16,16 +16,18 @@ export default function GenerationEntry({ ix }) {
     const paramsContext = useContext(ParamsStoreContext)
     const params = useSyncExternalStore(paramsContext.subscribe(), paramsContext.get())
 
-    const current = params[ix]
+    const current = params.xrays[ix]
     const acq = current.acquisition_params
 
     function handleRemove() {
-        paramsContext.set(params.slice(0, ix).concat(params.slice(ix + 1)))
+        const newParams = structuredClone(params)
+        newParams.xrays = params.xrays.slice(0, ix).concat(params.xrays.slice(ix + 1))
+        paramsContext.set(newParams)
     }
 
     function handleChange(key, value) {
-        let newParams = [...params]
-        newParams[ix].acquisition_params[key] = value
+        const newParams = structuredClone(params)
+        newParams.xrays[ix].acquisition_params[key] = value
         paramsContext.set(newParams)
     }
 
