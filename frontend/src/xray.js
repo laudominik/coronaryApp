@@ -12,5 +12,6 @@ export default class XRay {
         this.image = null
         this.filename = ""
         this.id = crypto.randomUUID()
+        this.generated = false;
     }
 }

@@ -72,7 +72,7 @@ export default function ImageEntry({ ix }) {
 
             <Collapse in={open}>
                 <Card.Body>
-                    <Card.Img variant='top' src={current.image} />
+                    <Card.Img variant='top' src={current.image} style={{maxWidth: "512px"}}/>
                     <Form>
                         <Form.Group className="mb-3">
                             <Form.Label>Image</Form.Label>

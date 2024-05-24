@@ -28,27 +28,27 @@ def _parse(xrays, requires_image=True):
 
         if not 'sid' in acq:
             return _fail()
-        xinfo.sid = float(acq['sid'])
+        xinfo.acquisition_params["sid"] = float(acq['sid'])
 
         if not 'sod' in acq:
             return _fail()
-        xinfo.sod = float(acq['sod'])
+        xinfo.acquisition_params["sod"] = float(acq['sod'])
 
         if not 'alpha' in acq:
             return _fail()
-        xinfo.alpha = float(acq['alpha'])
+        xinfo.acquisition_params["alpha"] = float(acq['alpha'])
 
         if not 'beta' in acq:
             return _fail()
-        xinfo.beta = float(acq['beta'])
+        xinfo.acquisition_params["beta"] = float(acq['beta'])
 
         if not 'spacing_r' in acq:
             return _fail()
-        xinfo.spacing_r = float(acq['spacing_r'])
+        xinfo.acquisition_params["spacing_r"] = float(acq['spacing_r'])
 
         if not 'spacing_c' in acq:
             return _fail()
-        xinfo.spacing_c = float(acq['spacing_c'])
+        xinfo.acquisition_params["spacing_c"] = float(acq['spacing_c'])
 
         if not requires_image:
             xinfs.append(xinfo)
@@ -58,14 +58,12 @@ def _parse(xrays, requires_image=True):
             return _fail(IMAGE_MISSING_MSG)
 
         imgb64 = xray['image']
-        print(imgb64[:100])
         if imgb64 is None:
             return _fail(IMAGE_MISSING_MSG)
         xinfo.image = _b64_to_numpy(imgb64)
         #TODO: check if shapes are OK
         xinfo.height = xinfo.image.shape[0]
         xinfo.width = xinfo.image.shape[1]
-        print(xinfo.image.shape)
         xinfs.append(xinfo)
     return xinfs, None
 
@@ -74,6 +72,7 @@ def parse_generation_params(body):
     bdy = json.loads(body)
     xrays, msg =  _parse(bdy["xrays"], requires_image=False)
     return bdy['seed'], xrays, msg
+
 
 def _b64_to_numpy(b64):
     format, imgstr = b64.split(';base64,')

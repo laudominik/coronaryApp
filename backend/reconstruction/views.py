@@ -56,10 +56,8 @@ def generator_worker(request):
     tree_path = "./vessel_tree_generator/RCA_branch_control_points/moderate"
     vessel_type = "RCA"
     ImagerPixelSpacing = 0.35 / 1000
-
-    if seed is not None:
-        np.random.seed(seed)
-    rng = np.random.default_rng()
+    print("seed", seed)
+    rng = np.random.default_rng(seed=seed)
 
     # vessel can be None due to invalid subsampling
     vessel = None
@@ -68,12 +66,19 @@ def generator_worker(request):
 
     images = []
     for i, xray in enumerate(xrays):
-        image = make_projection(vessel, xray.alpha, xray.beta, xray.sod, xray.sid, (ImagerPixelSpacing, ImagerPixelSpacing))
+        acq = xray.acquisition_params
+        print(acq["sod"], acq["sid"])
+
+        image = make_projection(vessel, acq["alpha"], acq["beta"], acq["sod"], acq["sid"], (ImagerPixelSpacing, ImagerPixelSpacing))
         image = Image.fromarray(image)
         buf = BytesIO()
         image.save(buf, format='PNG')
         img_str = base64.b64encode(buf.getvalue()).decode("utf-8")
         xrays[i].image = f'data:image/png;base64,{img_str}'
+        xrays[i].acquisition_params["spacing_r"] = ImagerPixelSpacing
+        xrays[i].acquisition_params["spacing_c"] = ImagerPixelSpacing
+        xrays[i].filename = f"generated_{acq['alpha']}_{acq['beta']}"
+        xrays[i].generated = True
 
     # return the generated images
     return JsonResponse({
