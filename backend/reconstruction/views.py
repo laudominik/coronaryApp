@@ -41,6 +41,7 @@ def reconstruction_worker(request):
         "status": 0, 
         "vessel": flatten(pts['vessel']),
         "centerlines": flatten(pts['centerlines']),
+        "bifurcations": flatten(pts['bifurcations']),
         "shadows": flatten(pts['shadows']),
         "sources": flatten(pts['sources'])
         })

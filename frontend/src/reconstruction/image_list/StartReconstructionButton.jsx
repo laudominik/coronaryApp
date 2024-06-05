@@ -1,6 +1,6 @@
 import { useContext, useState, useSyncExternalStore } from 'react';
 import { Button, Card } from 'react-bootstrap';
-import { ReconstructionErrorStoreContext, VesselStoreContext, SourcesStoreContext, CenterlineStoreContext, ShadowsStoreContext, XRaysStoreContext } from '../reconstructionStore';
+import { ReconstructionErrorStoreContext, VesselStoreContext, SourcesStoreContext, CenterlineStoreContext, ShadowsStoreContext, XRaysStoreContext, BifurcationStoreContext } from '../reconstructionStore';
 import { faCube } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -11,6 +11,7 @@ export default function StartReconstructionButton() {
     const vesselContext = useContext(VesselStoreContext)
     const sourcesContext = useContext(SourcesStoreContext)
     const centerlineContext = useContext(CenterlineStoreContext)
+    const bifurcationsContext = useContext(BifurcationStoreContext)
     const shadowsContext = useContext(ShadowsStoreContext)
     const xraysContext = useContext(XRaysStoreContext)
     const _ = useSyncExternalStore(xraysContext.subscribe(), xraysContext.get())
@@ -39,6 +40,7 @@ export default function StartReconstructionButton() {
                 shadowsContext.set(jso.shadows)
                 centerlineContext.set(jso.centerlines)
                 sourcesContext.set(jso.sources)
+                bifurcationsContext.set(jso.bifurcations)
                 errorContext.set("")
             } else {
                 errorContext.set(jso.msg)

@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useSyncExternalStore } from "react";
 import * as THREE from 'three';
-import { CenterlineStoreContext, ShadowsStoreContext, SourcesStoreContext, VesselStoreContext } from "../reconstructionStore";
+import { CenterlineStoreContext, ShadowsStoreContext, SourcesStoreContext, VesselStoreContext, BifurcationStoreContext } from "../reconstructionStore";
 
 const POINT_SIZE = 5.0;
 
@@ -10,17 +10,25 @@ export function Vessel() {
     return <Cloud pcd={vessel} color='#ff0000' />
 }
 
+export function Centerlines() {
+    const centerlinesContext = useContext(CenterlineStoreContext)
+    const centerlines = useSyncExternalStore(centerlinesContext.subscribe(), centerlinesContext.get())
+    return <Cloud pcd={centerlines} color='#0000ff' />
+}
+
+export function Bifurcations() {
+    const bifurcationsContext = useContext(BifurcationStoreContext)
+    const bifurcations = useSyncExternalStore(bifurcationsContext.subscribe(), bifurcationsContext.get())
+    return <Cloud pcd={bifurcations} color='#ff00ff' />
+}
+
 export function ImageShadows() {
     const shadowsContext = useContext(ShadowsStoreContext)
     const shadows = useSyncExternalStore(shadowsContext.subscribe(), shadowsContext.get())
     return <Cloud pcd={shadows} color='#000000' />
 }
 
-export function Centerlines() {
-    const centerlinesContext = useContext(CenterlineStoreContext)
-    const centerlines = useSyncExternalStore(centerlinesContext.subscribe(), centerlinesContext.get())
-    return <Cloud pcd={centerlines} color='#0000ff' />
-}
+
 
 export function Sources() {
     const sourcesContext = useContext(SourcesStoreContext)

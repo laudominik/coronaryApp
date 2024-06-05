@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { Canvas, useThree } from '@react-three/fiber'
 import { Grid, CameraControls } from '@react-three/drei'
 import { useControls, buttonGroup } from 'leva'
-import { Centerlines, ImageShadows, Sources, Vessel } from './PointClouds';
+import { Bifurcations, Centerlines, ImageShadows, Sources, Vessel } from './PointClouds';
 
 const { DEG2RAD } = THREE.MathUtils
 
@@ -35,7 +35,7 @@ function Scene({ setFullscreen }) {
     const cameraControlsRef = useRef()
 
     const { camera } = useThree()
-    const { enabled, vessel, centerlines, shadows, sources } = useControls({
+    const { enabled, vessel, centerlines, shadows, sources, bifurcations } = useControls({
         zaxis: buttonGroup({
             label: 'rotate z axis',
             opts: {
@@ -69,6 +69,7 @@ function Scene({ setFullscreen }) {
         }),
         vessel: { value: true, label: 'show vessel' },
         centerlines: { value: false, label: 'show centerline' },
+        bifurcations: { value: false, label: 'show bifurcations' },
         shadows: { value: false, label: 'show shadows' },
         sources: { value: false, label: 'show sources' }
     })
@@ -79,6 +80,7 @@ function Scene({ setFullscreen }) {
             {shadows ? <ImageShadows /> : <></>}
             {sources ? <Sources /> : <></>}
             {centerlines ? <Centerlines /> : <></>}
+            {bifurcations ? <Bifurcations /> : <></>}
 
             <group position-y={-1.0}>
                 <Ground />
