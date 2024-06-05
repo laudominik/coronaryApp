@@ -22,7 +22,7 @@ export default function Viewport() {
                 zIndex: 10
             } : { height: "50vh", width: "60%" }}
             >
-                <Canvas shadows camera={{ position: [0, 0, 5], fov: 100 }} style={{ background: '#ededed' }}>
+                <Canvas shadows camera={{ position: [0, 0, 0.1], fov: 100, near: 0.001 }} style={{ background: '#ededed' }}>
                     <Scene setFullscreen={setFullscreen} />
                 </Canvas>
             </div>
@@ -70,7 +70,7 @@ function Scene({ setFullscreen }) {
         vessel: { value: true, label: 'show vessel' },
         centerlines: { value: false, label: 'show centerline' },
         shadows: { value: false, label: 'show shadows' },
-        sources: { value: false, label: 'show shadows' }
+        sources: { value: false, label: 'show sources' }
     })
 
     return (

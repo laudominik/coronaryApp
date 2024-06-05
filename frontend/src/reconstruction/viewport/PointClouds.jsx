@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useSyncExternalStore } from "react";
 import * as THREE from 'three';
 import { CenterlineStoreContext, ShadowsStoreContext, SourcesStoreContext, VesselStoreContext } from "../reconstructionStore";
 
+const POINT_SIZE = 5.0;
 
 export function Vessel() {
     const vesselContext = useContext(VesselStoreContext)
@@ -43,6 +44,6 @@ function Cloud({ pcd, color }) {
     }, [pcd])
     return <points ref={bufferRef} castShadow receiveShadow>
         <bufferGeometry />
-        <pointsMaterial attach="material" color={color} />
+        <pointsMaterial attach="material" color={color} size={POINT_SIZE} sizeAttenuation={false} />
     </points>
 }
