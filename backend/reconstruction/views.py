@@ -34,16 +34,21 @@ def reconstruction_worker(request):
             flattened.append(pt[1])
             flattened.append(pt[2])
         return flattened
-    
     print("[RECONSTRUCTION] done")
 
-    return JsonResponse({
-        "status": 0, 
-        "vessel": flatten(pts['vessel']),
-        "centerlines": flatten(pts['centerlines']),
-        "shadows": flatten(pts['shadows']),
-        "sources": flatten(pts['sources'])
-        })
+
+    pts["status"] = 0
+
+    return JsonResponse(pts)
+
+    # return JsonResponse({
+    #     "status": 0, 
+    #     "vessel": flatten(pts['vessel']),
+    #     "centerlines": flatten(pts['centerlines']),
+    #     "bifurcations": flatten(pts['bifurcations']),
+    #     "sources": flatten(pts['sources']),
+    #     "shadows": [flatten(pt) for pt in pts['shadows']] 
+    #     })
 
 
 @api_view(['POST'])
