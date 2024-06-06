@@ -1,10 +1,12 @@
 import * as THREE from 'three';
 
-import { useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Canvas, useThree } from '@react-three/fiber'
 import { Grid, CameraControls } from '@react-three/drei'
 import { useControls, buttonGroup } from 'leva'
 import { Bifurcations, Centerlines, ImageShadows, Sources, Vessel } from './PointClouds';
+import { ShadowsStoreContext, SourcesStoreContext } from '../reconstructionStore';
+import { Rays, Screens } from './Screens';
 
 const { DEG2RAD } = THREE.MathUtils
 
@@ -78,9 +80,12 @@ function Scene({ setFullscreen }) {
         <>
             {vessel ? <Vessel /> : <></>}
             {shadows ? <ImageShadows /> : <></>}
+            {shadows ? <Screens /> : <></>}
             {sources ? <Sources /> : <></>}
             {centerlines ? <Centerlines /> : <></>}
             {bifurcations ? <Bifurcations /> : <></>}
+
+            {shadows && sources ? <Rays /> : <></>}
 
             <group position-y={-1.0}>
                 <Ground />
@@ -93,6 +98,9 @@ function Scene({ setFullscreen }) {
         </>
     )
 }
+
+
+
 
 function Ground() {
     const gridConfig = {

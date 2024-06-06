@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import Viewport from "./viewport/Viewport";
 import ImageList from './image_list/ImageList';
 import { Container, Row, Col } from 'react-bootstrap';

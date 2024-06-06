@@ -1,6 +1,7 @@
 import { useContext, useEffect, useRef, useSyncExternalStore } from "react";
 import * as THREE from 'three';
 import { CenterlineStoreContext, ShadowsStoreContext, SourcesStoreContext, VesselStoreContext, BifurcationStoreContext } from "../reconstructionStore";
+import { faL } from "@fortawesome/free-solid-svg-icons";
 
 const POINT_SIZE = 5.0;
 
@@ -25,23 +26,26 @@ export function Bifurcations() {
 export function ImageShadows() {
     const shadowsContext = useContext(ShadowsStoreContext)
     const shadows = useSyncExternalStore(shadowsContext.subscribe(), shadowsContext.get())
-    return <Cloud pcd={shadows} color='#000000' />
+
+    return (
+        <>
+            {shadows.map(el => <Cloud pcd={el} color='#000000' />)}
+        </>
+    )
 }
-
-
 
 export function Sources() {
     const sourcesContext = useContext(SourcesStoreContext)
     const sources = useSyncExternalStore(sourcesContext.subscribe(), sourcesContext.get())
-    return <Cloud pcd={sources} color='#ffff00' />
+    return <Cloud pcd={sources} color='#00ffff' size={10} />
 }
 
-function Cloud({ pcd, color }) {
+function Cloud({ pcd, color, size = POINT_SIZE }) {
     const bufferRef = useRef()
     useEffect(() => {
         if (bufferRef.current) {
             const geometry = new THREE.BufferGeometry();
-            const attribute = new THREE.Float32BufferAttribute(pcd, 3);
+            const attribute = new THREE.Float32BufferAttribute(pcd.flat(), 3);
             geometry.setAttribute('position', attribute);
 
             bufferRef.current.geometry.dispose(); // Dispose of the old geometry to free up memory

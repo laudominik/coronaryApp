@@ -9,9 +9,10 @@ from .util import construct_cube, skeletonize
 from .bifurcations import remove_duplicates_and_round_points, generate_clique_graph, minimum_spanning_tree, extract_possible_idxs_from_mst, filter_bifurcation_points
 
 
-def reconstruction(xrays: [XRayInfo]):
+def reconstruction(xrays: [XRayInfo], type='automatic'):
     '''
     :param xrays: x ray images to run reconstruction on
+    :param type: what method to use, 'automatic' is the inverse raytracing, 'manual' is Kalmykova's method
     '''
 
     sod_max = max(xray.acquisition_params['sod'] for xray in xrays)
@@ -23,23 +24,18 @@ def reconstruction(xrays: [XRayInfo]):
     vessel = __get_vessel(radius, xrays)
     centerlines = __get_centerlines(vessel, xrays)
     bifurcations = __get_bifurcations(centerlines)
+    sources = __get_sources(xrays)
+    shadows = __get_shadows(xrays)
+    rects = __get_projection_rects(xrays)
 
-    # TODO: replace with the method when its done
-    sources = []
-    shadows = []
-   
-    for i in range(10000):
-        sources.append([random.uniform(-2000, 2000), random.uniform(-2000, 2000), random.uniform(-2000, 2000)])
-    for i in range(10000):
-        shadows.append([random.uniform(-2000, 2000), random.uniform(-2000, 2000), random.uniform(-2000, 2000)])
-    
     # TODO: subsample from it so that we do not send too much points to frontend
     return {
-        'vessel': vessel,
-        'bifurcations': bifurcations,
-        'centerlines': centerlines,
-        'sources': sources,
-        'shadows': shadows
+        'vessel': vessel.tolist(),
+        'bifurcations': bifurcations.tolist(),
+        'centerlines': centerlines.tolist(),
+        'sources':  [s.tolist() for s in sources],
+        'shadows':  [s.tolist() for s in shadows],
+        'rects': [s.tolist() for s in rects]
     }
 
 
@@ -68,3 +64,15 @@ def __get_bifurcations(centerlines):
     bifurcation_idxs = extract_possible_idxs_from_mst(mst)
     bifurcation_idxs = filter_bifurcation_points(mst, bifurcation_idxs)
     return centerlines[bifurcation_idxs]
+
+
+def __get_sources(xrays):
+    return [xray.source() for xray in xrays]
+
+
+def __get_shadows(xrays):
+    return [xray.shadow().astype(np.float64) for xray in xrays]
+
+
+def __get_projection_rects(xrays):
+    return [xray.projection_rect().astype(np.float64) for xray in xrays]        

@@ -1,5 +1,6 @@
 import numpy as np
 import math
+import random
 
 from .XRayInfo import XRayInfo
 

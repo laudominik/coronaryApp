@@ -1,4 +1,4 @@
-import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap'
+import { Navbar, Container, Nav } from 'react-bootstrap'
 
 export default function BrandNav() {
   return <Navbar bg='dark' data-bs-theme="dark" expand="lg" className="bg-body-tertiary">
@@ -9,6 +9,7 @@ export default function BrandNav() {
         <Nav className="me-auto">
           <Nav.Link href="reconstruction">Reconstruction</Nav.Link>
           <Nav.Link href="generation">Generation</Nav.Link>
+          <Nav.Link href="manual">Manual</Nav.Link>
         </Nav>
       </Navbar.Collapse>
     </Container>
