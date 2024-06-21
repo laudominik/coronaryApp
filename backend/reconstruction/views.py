@@ -1,19 +1,20 @@
 import numpy as np
-import  base64
+import base64
 import json
 
 from django.http import JsonResponse, HttpResponse
-from django.views.decorators.csrf import csrf_exempt # Allow request without csrf_token set
+from django.views.decorators.csrf import csrf_exempt  # Allow request without csrf_token set
 from rest_framework.decorators import api_view
 from PIL import Image
 from io import BytesIO
 
+from manual.parameters.parser.manual_parameters_parser import ManualParametersParser
 from xray_angio_3d import reconstruction
 from reconstruction.parser import parse_reconstruction_params, parse_generation_params
 from vessel_tree_generator.module import *
 
 
-@api_view(['POST']) 
+@api_view(['POST'])
 def reconstruction_worker(request):
     if request.method != 'POST':
         return JsonResponse({"status": fail, "reason": "wrong method"})
@@ -23,7 +24,7 @@ def reconstruction_worker(request):
     # print(request.body)
     if not xrays:
         return JsonResponse({"status": 1, "msg": msg})
- 
+
     print("[RECONSTRUCTION] pending...")
     pts = reconstruction(xrays)
 
@@ -34,8 +35,8 @@ def reconstruction_worker(request):
             flattened.append(pt[1])
             flattened.append(pt[2])
         return flattened
-    print("[RECONSTRUCTION] done")
 
+    print("[RECONSTRUCTION] done")
 
     pts["status"] = 0
 
@@ -74,7 +75,8 @@ def generator_worker(request):
         acq = xray.acquisition_params
         print(acq["sod"], acq["sid"])
 
-        image = make_projection(vessel, acq["alpha"], acq["beta"], acq["sod"], acq["sid"], (ImagerPixelSpacing, ImagerPixelSpacing))
+        image = make_projection(vessel, acq["alpha"], acq["beta"], acq["sod"], acq["sid"],
+                                (ImagerPixelSpacing, ImagerPixelSpacing))
         image = Image.fromarray(image)
         buf = BytesIO()
         image.save(buf, format='PNG')
@@ -89,4 +91,4 @@ def generator_worker(request):
     return JsonResponse({
         "status": 0,
         "xrays": [json.dumps(xray.__dict__) for xray in xrays]
-        })
+    })

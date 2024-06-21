@@ -1,4 +1,4 @@
-from manual.parameters.mapper.ImageMapper import ImageMapper
+from manual.parameters.mapper.image_mapper import ImageMapper
 from xray_angio_3d import XRayInfo
 
 
@@ -36,12 +36,7 @@ class JsonImageInformationExtractor:
         return True
 
     def _get_necessary_parameters(self, acq_params, img_parameters=XRayInfo()):
-        img_parameters.acquisition_params["sid"] = float(acq_params['sid'])
-        img_parameters.acquisition_params["sod"] = float(acq_params['sod'])
-        img_parameters.acquisition_params["alpha"] = float(acq_params['alpha'])
-        img_parameters.acquisition_params["beta"] = float(acq_params['beta'])
-        img_parameters.acquisition_params["spacing_r"] = float(acq_params['spacing_r'])
-        img_parameters.acquisition_params["spacing_c"] = float(acq_params['spacing_c'])
+        img_parameters.acquisition_params.update({param: float(acq_params[param]) for param in self._necessary_params})
         return img_parameters
 
     def _get_image_parameters(self, image, img_parameters=XRayInfo()):
