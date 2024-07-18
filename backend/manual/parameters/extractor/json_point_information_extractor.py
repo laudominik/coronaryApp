@@ -12,11 +12,11 @@ class JsonPointInformationExtractor:
 
     def _check_if_all_parameters_are_provided(self, point_params):
         if point_params is None:
-            return False
+            return False, "point_params"
         for param in self._necessary_params:
             if param not in point_params:
                 return False, param
-        return True
+        return True, None
 
     def _get_necessary_parameters(self, point_params):
         x = float(point_params['x'])

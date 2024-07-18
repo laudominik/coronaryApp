@@ -29,11 +29,11 @@ class JsonImageInformationExtractor:
 
     def _check_if_all_parameters_are_provided(self, required_params, acq_params):
         if acq_params is None:
-            return False
+            return False, "acq_params"
         for param in required_params:
             if param not in acq_params:
                 return False, param
-        return True
+        return True, None
 
     def _get_necessary_parameters(self, acq_params, img_parameters=XRayInfo()):
         img_parameters.acquisition_params.update({param: float(acq_params[param]) for param in self._necessary_params})
