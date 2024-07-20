@@ -1,4 +1,5 @@
 import json
+import cv2
 
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
@@ -18,8 +19,16 @@ def manual_lines_worker(request):
     except Exception as e:
         return JsonResponse({"status": 400, "message": "Bad request", "reason": str(e)})
     lines = _extract_lines_from_info(images_info, point_info)
+
+    path = r'D:\Projekty\coronary3D\data\kalmyk\images\kalmyk\image0010c.png'
+    image = cv2.imread(path)
+    for point in lines[0]:
+        cv2.circle(image, (int(point[0]), int(point[1])), 5, (255, 255, 0), 1)
+
+    cv2.imshow("image", image)
+    while True:
+        if cv2.waitKey(0) == ord('x'): break
     lines_response = _map_lines_to_response(lines)
-    print(lines_response)
     return lines_response
 
 
@@ -33,8 +42,8 @@ def _extract_lines_from_info(images_info, point_info):
 
 def _map_lines_to_response(lines):
     lines_json = {
-        "lines": lines,
+        "lines": [line.tolist() for line in lines],
         "status": 200,
         "message": "OK"
     }
-    return JsonResponse(json.dumps(lines_json))
+    return JsonResponse(lines_json)

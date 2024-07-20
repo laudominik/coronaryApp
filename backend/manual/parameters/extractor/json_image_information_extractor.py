@@ -16,7 +16,7 @@ class JsonImageInformationExtractor:
             self._check_if_all_parameters_are_provided(self._necessary_params + self._image_params, acq_params)
         if not are_all_parameters_provided:
             raise ValueError(f"Incorrect request parameters, missing param {missing_param}")
-        necessary_info = self._get_necessary_parameters(acq_params)
+        necessary_info = self._get_necessary_parameters(acq_params, XRayInfo())
         return self._get_image_parameters(image['image'], necessary_info)
 
     def extract_info_from_image(self, image):
@@ -25,7 +25,7 @@ class JsonImageInformationExtractor:
                                                                                                 acq_params)
         if not are_all_parameters_provided:
             raise ValueError(f"Incorrect request parameters, missing param {missing_param}")
-        return self._get_necessary_parameters(acq_params)
+        return self._get_necessary_parameters(acq_params, XRayInfo())
 
     def _check_if_all_parameters_are_provided(self, required_params, acq_params):
         if acq_params is None:
@@ -35,7 +35,7 @@ class JsonImageInformationExtractor:
                 return False, param
         return True, None
 
-    def _get_necessary_parameters(self, acq_params, img_parameters=XRayInfo()):
+    def _get_necessary_parameters(self, acq_params, img_parameters):
         img_parameters.acquisition_params.update({param: float(acq_params[param]) for param in self._necessary_params})
         return img_parameters
 
