@@ -8,7 +8,6 @@ from rest_framework.decorators import api_view
 from PIL import Image
 from io import BytesIO
 
-from manual.parameters.parser.manual_parameters_parser import ManualParametersParser
 from xray_angio_3d import reconstruction
 from reconstruction.parser import parse_reconstruction_params, parse_generation_params
 from vessel_tree_generator.module import *
