@@ -17,9 +17,17 @@ def find_lines(point_info: BifurcationPointInfo, images_info: [XRayInfo]):
             continue
         projected_points = projection.project(line_in_3d, info)
         projected_points = np.array([projected_points[:, 1], projected_points[:, 0]]).T
-        lines.append(projected_points)
+        line = __extract_function_parameters(projected_points[99], projected_points[100])
+        lines.append(line)
     return lines
 
+
+def __extract_function_parameters(point_a, point_b):
+    x_a, x_b = point_a[0], point_b[0]
+    y_a, y_b = point_a[1], point_b[1]
+    a = (y_a - y_b) / (x_a - x_b)
+    b = y_a - a * x_a
+    return a, b
 
 def __extract_line_between_points(bifurcation_point, origin):
     number_of_mapped_points = 200

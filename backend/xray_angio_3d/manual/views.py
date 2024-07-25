@@ -31,7 +31,8 @@ def __extract_lines_from_info(images_info, point_info):
 
 def __map_lines_to_response(lines):
     lines_json = {
-        "service": [line.tolist() for line in lines],
+        "a": [a for (a, b) in lines],
+        "b": [b for (a, b) in lines],
         "status": 200,
         "message": "OK"
     }
