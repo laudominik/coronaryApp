@@ -16,41 +16,23 @@ from vessel_tree_generator.module import *
 @api_view(['POST'])
 def reconstruction_worker(request):
     if request.method != 'POST':
-        return JsonResponse({"status": fail, "reason": "wrong method"})
+        return JsonResponse({"status": 400, "reason": "Bad request"})
 
     # TODO: get reconstruction params and validate them
     xrays, msg = parse_reconstruction_params(request.body)
-    # print(request.body)
     if not xrays:
-        return JsonResponse({"status": 1, "msg": msg})
+        return JsonResponse({"status": 400, "msg": msg})
 
     print("[RECONSTRUCTION] pending...")
     pts = reconstruction(xrays)
-
-    def flatten(pts):
-        flattened = []
-        for pt in pts:
-            flattened.append(pt[0])
-            flattened.append(pt[1])
-            flattened.append(pt[2])
-        return flattened
-
     print("[RECONSTRUCTION] done")
 
-    pts["status"] = 0
+    pts["status"] = 200
 
     return JsonResponse(pts)
 
-    # return JsonResponse({
-    #     "status": 0, 
-    #     "vessel": flatten(pts['vessel']),
-    #     "centerlines": flatten(pts['centerlines']),
-    #     "bifurcations": flatten(pts['bifurcations']),
-    #     "sources": flatten(pts['sources']),
-    #     "shadows": [flatten(pt) for pt in pts['shadows']] 
-    #     })
 
-
+# TODO: remove this method to another file, and refactor this
 @api_view(['POST'])
 def generator_worker(request):
     seed, xrays, msg = parse_generation_params(request.body)
@@ -88,6 +70,6 @@ def generator_worker(request):
 
     # return the generated images
     return JsonResponse({
-        "status": 0,
+        "status": 200,
         "xrays": [json.dumps(xray.__dict__) for xray in xrays]
     })

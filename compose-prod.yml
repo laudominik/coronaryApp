@@ -1,0 +1,17 @@
+version: '3'
+services:
+  frontend:
+    container_name: coronary-frontend
+    entrypoint: serve -s build -p 3000
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+  backend:
+    container_name: coronary-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports: 
+      - "8000:8000"
