@@ -14,12 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from reconstruction.views import reconstruction_worker, generator_worker
+from reconstruction.views import auto_reconstruction_worker, generator_worker, manual_reconstruction_worker
 from xray_angio_3d.manual.views import manual_lines_worker
 
 urlpatterns = [
-    #path('admin/', admin.site.urls),
-    path('reconstruction/', reconstruction_worker),
+    path('reconstruction/auto', auto_reconstruction_worker),
+    path('reconstruction/manual', manual_reconstruction_worker),
     path("generation/", generator_worker),
     path("lines/", manual_lines_worker)
 ]

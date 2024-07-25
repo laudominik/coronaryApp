@@ -12,6 +12,7 @@ from xray_angio_3d import reconstruction
 from reconstruction.parser import parse_reconstruction_params, parse_generation_params
 from vessel_tree_generator.module import *
 from xray_angio_3d.manual.parameters.parser.manual_parameters_parser import ManualParametersParser
+from xray_angio_3d.manual.service import kalmykova_service
 
 
 @api_view(['POST'])
@@ -48,12 +49,17 @@ def manual_reconstruction_worker(request):
 
 
 def __extract_point_from_info(images_info, points_info):
-    return True
+    print("[POINT] finding...")
+    point = kalmykova_service.find_point(points_info, images_info)
+    print("[POINT] found")
+    return point
 
 
 def __map_point_to_response(point):
     response = {
-        "point": point,
+        "x": point.x,
+        "y": point.y,
+        "z": point.z,
         "status": 200,
         "message": "OK"
     }

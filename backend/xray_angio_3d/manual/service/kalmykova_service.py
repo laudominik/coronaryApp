@@ -22,6 +22,15 @@ def find_lines(point_info: BifurcationPointInfo, images_info: [XRayInfo]):
     return lines
 
 
+def find_point(points_info, images_info: [XRayInfo]):
+    first_point, second_point = points_info[0], points_info[1]
+    first_image, second_image = __assign_images_to_labels_by_point(first_point, images_info)
+    first_source, second_source = first_image.source(), second_image.source()
+    first_point_3d = first_image.shadow(np.array([(first_point.y, first_point.x)]))[0]
+    second_point_3d = second_image.shadow(np.array([(second_point.y, second_point.x)]))[0]
+    return __find_point_in_3d(first_source, second_source, first_point_3d, second_point_3d)
+
+
 def __extract_function_parameters(point_a, point_b):
     x_a, x_b = point_a[0], point_b[0]
     y_a, y_b = point_a[1], point_b[1]
@@ -29,8 +38,54 @@ def __extract_function_parameters(point_a, point_b):
     b = y_a - a * x_a
     return a, b
 
+
 def __extract_line_between_points(bifurcation_point, origin):
     number_of_mapped_points = 200
     line_multiplier = (bifurcation_point - origin) / number_of_mapped_points
     line = [origin + i * line_multiplier for i in range(number_of_mapped_points)]
     return line
+
+
+def __assign_images_to_labels_by_point(point_info, images_info):
+    if point_info.image_index == 0:
+        return images_info[0], images_info[1]
+    else:
+        return images_info[1], images_info[0]
+
+
+def __find_point_in_3d(F1, F2, P1, P2):
+    """ Function which solves linear equations
+        L1 and L2 to calculate point P
+        :param F1: 3D projection of X-ray source from base view
+        :param F2: 3D projection of X-ray source from second view
+        :param P1: 3D projection of a 2D point from base view
+        :param P2: 3D projection of a 2D point from second view
+        :return P: 3D position of 2D point
+    """
+    # vertexes
+    eta = np.subtract(P1, F1)
+    tau = np.subtract(P2, F2)
+
+    # determinant
+    eta_eta = float(np.matmul(eta, eta.transpose()))
+    tau_tau = float(-np.matmul(tau, tau.transpose()))
+    eta_tau1 = float(np.matmul(eta, tau.transpose()))
+    eta_tau2 = float(-np.matmul(eta, tau.transpose()))
+
+    F2_F1 = np.subtract(F2, F1)
+    eta_F = float(np.matmul(eta, F2_F1.transpose()))
+    tau_F = float(np.matmul(tau, F2_F1.transpose()))
+
+    deter = (eta_eta * tau_tau) - (eta_tau1 * eta_tau2)
+
+    # parameters s and t
+    s = ((eta_F * tau_tau) - (eta_tau2 * tau_F)) / deter
+    t = ((eta_eta * tau_F) - (eta_F * eta_tau1)) / deter
+
+    # calculating points L1s nad L2t
+    L1s = F1 + (s * eta)
+    L2t = F2 + (t * tau)
+
+    # Point P
+    P = (L1s + L2t) / 2
+    return BifurcationPointInfo(x=P[0], y=P[1], z=P[2], image_index=None)

@@ -20,7 +20,9 @@ class ManualParametersParser:
         images, points = self.__extract_image_and_point_from_body(request_body, pts_label="points")
         if images is None or points is None:
             raise ValueError("Incorrect request body, missing images or points")
-        images_info = [self.__extract_info_from_image(image) for image in images]
+        if len(images) != 2 or len(points) != 2:
+            raise ValueError("Incorrect number of points or images")
+        images_info = [self.__extract_info_from_image_with_details(image) for image in images]
         points_info = [self.__map_selected_point_to_required_information(point) for point in points]
         return images_info, points_info
 
@@ -34,6 +36,9 @@ class ManualParametersParser:
 
     def __extract_info_from_image(self, image):
         return self._image_information_extractor.extract_info_from_image(image)
+
+    def __extract_info_from_image_with_details(self, image):
+        return self._image_information_extractor.extract_info_from_image_with_image_details(image)
 
     def __map_selected_point_to_required_information(self, selected_point):
         return self._point_information_extractor.extract_info_from_point(selected_point)
