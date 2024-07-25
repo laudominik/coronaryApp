@@ -11,10 +11,11 @@ from io import BytesIO
 from xray_angio_3d import reconstruction
 from reconstruction.parser import parse_reconstruction_params, parse_generation_params
 from vessel_tree_generator.module import *
+from xray_angio_3d.manual.parameters.parser.manual_parameters_parser import ManualParametersParser
 
 
 @api_view(['POST'])
-def reconstruction_worker(request):
+def auto_reconstruction_worker(request):
     if request.method != 'POST':
         return JsonResponse({"status": 400, "reason": "Bad request"})
 
@@ -28,8 +29,22 @@ def reconstruction_worker(request):
     print("[RECONSTRUCTION] done")
 
     pts["status"] = 200
-
     return JsonResponse(pts)
+
+
+@api_view(['POST'])
+def manual_reconstruction_worker(request):
+    if request.method != 'POST':
+        return JsonResponse({"status": 400, "message": "Bad request"})
+    try:
+        parameters_parser = ManualParametersParser()
+        request_body = json.loads(request.body)
+        images_info, point_info = parameters_parser.parse_reconstruction_request(request_body)
+    except Exception as e:
+        return JsonResponse({"status": 400, "message": "Bad request", "reason": str(e)})
+    lines = __extract_lines_from_info(images_info, point_info)
+    lines_response = __map_lines_to_response(lines)
+    return lines_response
 
 
 # TODO: remove this method to another file, and refactor this
