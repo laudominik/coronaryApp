@@ -17,12 +17,12 @@ from xray_angio_3d.manual.parameters.parser.manual_parameters_parser import Manu
 @api_view(['POST'])
 def auto_reconstruction_worker(request):
     if request.method != 'POST':
-        return JsonResponse({"status": 400, "reason": "Bad request"})
+        return JsonResponse({"status": 400, "message": "Bad request", "reason": "Wrong method"})
 
     # TODO: get reconstruction params and validate them
     xrays, msg = parse_reconstruction_params(request.body)
     if not xrays:
-        return JsonResponse({"status": 400, "msg": msg})
+        return JsonResponse({"status": 400, "message": msg})
 
     print("[RECONSTRUCTION] pending...")
     pts = reconstruction(xrays)
@@ -35,16 +35,29 @@ def auto_reconstruction_worker(request):
 @api_view(['POST'])
 def manual_reconstruction_worker(request):
     if request.method != 'POST':
-        return JsonResponse({"status": 400, "message": "Bad request"})
+        return JsonResponse({"status": 400, "message": "Bad request", "reason": "Wrong method"})
     try:
         parameters_parser = ManualParametersParser()
         request_body = json.loads(request.body)
-        images_info, point_info = parameters_parser.parse_reconstruction_request(request_body)
+        images_info, points_info = parameters_parser.parse_reconstruction_request(request_body)
     except Exception as e:
         return JsonResponse({"status": 400, "message": "Bad request", "reason": str(e)})
-    lines = __extract_lines_from_info(images_info, point_info)
-    lines_response = __map_lines_to_response(lines)
-    return lines_response
+    point = __extract_point_from_info(images_info, points_info)
+    reconstruction_response = __map_point_to_response(point)
+    return reconstruction_response
+
+
+def __extract_point_from_info(images_info, points_info):
+    return True
+
+
+def __map_point_to_response(point):
+    response = {
+        "point": point,
+        "status": 200,
+        "message": "OK"
+    }
+    return JsonResponse(response)
 
 
 # TODO: remove this method to another file, and refactor this

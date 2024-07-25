@@ -10,7 +10,7 @@ from xray_angio_3d.manual.service import kalmykova_service
 @api_view(['POST'])
 def manual_lines_worker(request):
     if request.method != 'POST':
-        return JsonResponse({"status": 400, "message": "Bad request"})
+        return JsonResponse({"status": 400, "message": "Bad request", "reason": "Wrong method"})
     try:
         parameters_parser = ManualParametersParser()
         request_body = json.loads(request.body)
