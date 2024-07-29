@@ -9,11 +9,21 @@ from .util import construct_cube, skeletonize
 from .bifurcations import remove_duplicates_and_round_points, generate_clique_graph, minimum_spanning_tree, extract_possible_idxs_from_mst, filter_bifurcation_points
 
 
-def reconstruction(xrays: [XRayInfo], type='automatic'):
-    '''
+def reconstruction(xrays: [XRayInfo]):
+    """
+    the function performs automatic reconstruction using voxel hull based algorithm
+    for a given set of xrays
+
     :param xrays: x ray images to run reconstruction on
-    :param type: what method to use, 'automatic' is the inverse raytracing, 'manual' is Kalmykova's method
-    '''
+    :return: A dictionary containing various reconstructed components of the vessel, including:
+        - **vessel** (*list*): A list representing the reconstructed 3D vessel point cloud data.
+        - **bifurcations** (*list*): A list representing the bifurcation points within the vessel.
+        - **centerlines** (*list*): A list representing the centerlines of the vessel structure.
+        - **sources** (*list*): A list of source points derived from the X-ray data.
+        - **shadows** (*list*): A list of shadow points derived from the X-ray data.
+        - **rects** (*list*): A list of projection rectangles calculated
+
+    """
 
     sod_max = max(xray.acquisition_params['sod'] for xray in xrays)
     sid_min = min(xray.acquisition_params['sid'] for xray in xrays)

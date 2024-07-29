@@ -5,6 +5,14 @@ from xray_angio_3d import XRayInfo, projection
 
 
 def find_lines(point_info: BifurcationPointInfo, images_info: [XRayInfo]):
+    """
+    the function finds bounding line for a given point and a set of images
+
+    :param point_info: characteristic point location on a given image
+    :param images_info: other images
+    :return: list of line params representing the bounding line
+    """
+
     lines = []
     image_with_point: XRayInfo = images_info[point_info.image_index]
     origin = image_with_point.source()
@@ -23,6 +31,15 @@ def find_lines(point_info: BifurcationPointInfo, images_info: [XRayInfo]):
 
 
 def find_point(points_info, images_info: [XRayInfo]):
+    """
+    the function reconstructs 3D position of a point given a pair of
+    matching points
+
+    :param points_info: pair of points
+    :param images_info: pair of images corresponding to the points
+    :return: point reconstructed in 3D
+    """
+    
     first_point, second_point = points_info[0], points_info[1]
     first_image, second_image = __assign_images_to_labels_by_point(first_point, images_info)
     first_source, second_source = first_image.source(), second_image.source()
