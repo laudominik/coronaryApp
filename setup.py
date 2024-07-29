@@ -12,5 +12,6 @@ setup(
     description = ("Reconstruction of coronary arteries based on planary images"),
     packages = ['xray_angio_3d'],
     package_dir={'' : 'backend'},
-    long_description=read('README.md')
+    long_description=read('README.md'),
+    install_requires=['matplotlib', 'cv_algorithms', 'scipy', 'numpy'],
 )
