@@ -37,7 +37,7 @@ export default function StartReconstructionButton() {
             const response = await responseAsync
             const jso = await response.json()
 
-            if (jso.status == 0) {
+            if (jso.status == 200) {
                 vesselContext.set(jso.vessel)
                 shadowsContext.set(jso.shadows)
                 centerlineContext.set(jso.centerlines)

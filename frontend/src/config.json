@@ -1,4 +1,4 @@
 {
-    "RECONSTRUCTION_ENDPOINT": "http://127.0.0.1:8000/reconstruction/",
+    "RECONSTRUCTION_ENDPOINT": "http://127.0.0.1:8000/auto",
     "GENERATION_ENDPOINT": "http://127.0.0.1:8000/generation/"
 }

@@ -1,7 +1,9 @@
-from xray_angio_3d.manual.parameters.extractor.json_image_information_extractor import JsonImageInformationExtractor
-from xray_angio_3d.manual.parameters.extractor.json_point_information_extractor import JsonPointInformationExtractor
+from reconstruction.extractors.json_image_information_extractor import JsonImageInformationExtractor
+from reconstruction.extractors.json_point_information_extractor import JsonPointInformationExtractor
 
 
+
+# TODO: this should use parser.py convention 
 class ManualParametersParser:
 
     _image_information_extractor = JsonImageInformationExtractor()

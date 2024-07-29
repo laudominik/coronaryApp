@@ -47,7 +47,7 @@ export default function GenerationParamsList() {
         try {
             const response = await responseAsync
             const jso = await response.json()
-            if (jso.status == 0) {
+            if (jso.status == 200) {
                 errorContext.set("")
                 const result = jso.xrays.map(el => JSON.parse(el))
                 const newParams = structuredClone(params)

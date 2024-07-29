@@ -1,4 +1,4 @@
-from xray_angio_3d.manual.point.bifurcation_point_info import BifurcationPointInfo
+from xray_angio_3d.BifurcationPointInfo import BifurcationPointInfo
 
 
 class JsonPointInformationExtractor:
