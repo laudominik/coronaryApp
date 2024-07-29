@@ -1,0 +1,30 @@
+name: deploy
+
+on:
+  push:
+    branches: [ dev ]
+
+
+jobs:
+  release_sphinx:
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.11
+    steps:
+      - uses: actions/checkout@v1
+      - name: Building documentation
+        run: |
+          apt update && apt install ffmpeg libsm6 libxext6  -y
+          cd docs
+          pip install -r requirements.txt
+          pip install ..
+          make html
+      - uses: actions/upload-artifact@v1
+        with:
+          name: documentation
+          path: docs/build
+      # - uses: peaceiris/actions-gh-pages@v2.3.1
+      #   env:
+      #     PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     PUBLISH_BRANCH: gh-pages
+      #     PUBLISH_DIR: docs/build/html
