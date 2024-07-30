@@ -24,7 +24,7 @@ export default function StartReconstructionButton() {
     async function handleStart() {
         if (disabled) return;
         setDisabled(true)
-        const url = config["RECONSTRUCTION_ENDPOINT"]
+        const url = config["AUTO_RECONSTRUCTION_ENDPOINT"]
         const responseAsync = fetch(url, {
             method: 'POST',
             body: xraysContext.serialized(),

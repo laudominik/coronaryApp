@@ -1,4 +1,6 @@
 {
-    "RECONSTRUCTION_ENDPOINT": "http://127.0.0.1:8000/auto",
-    "GENERATION_ENDPOINT": "http://127.0.0.1:8000/generation/"
+    "AUTO_RECONSTRUCTION_ENDPOINT": "http://127.0.0.1:8000/auto",
+    "MANUAL_RECONSTRUCTION_ENDPOINT": "http://127.0.0.1:8000/manual",
+    "GENERATION_ENDPOINT": "http://127.0.0.1:8000/generation/",
+    "LINES_ENDPOINT": "http://127.0.0.1:8000/lines/"
 }
