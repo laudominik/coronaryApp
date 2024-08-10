@@ -50,7 +50,7 @@ export default function ImageEntry({ ix }) {
     }
 
     return (
-        <Card style={{ backgroundColor: 'black', color: 'white', margin: '1em' }}>
+        <Card className='image-entry'>
             <Card.Header style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Card.Title>xray: {current.filename == "" ? "empty image" : current.filename}</Card.Title>
                 <div>
@@ -72,20 +72,22 @@ export default function ImageEntry({ ix }) {
 
             <Collapse in={open}>
                 <Card.Body>
-                    <Card.Img variant='top' src={current.image} style={{maxWidth: "512px"}}/>
+                    <img src={current.image} className="image-entry__selected-image"/>
                     <Form>
-                        <Form.Group className="mb-3">
+                        <Form.Group className="image-entry__form-image-input">
                             <Form.Label>Image</Form.Label>
                             <Form.Control type="file" onChange={handleImageChange} />
                         </Form.Group>
+                        <Form.Group className='image-entry__form-params'>
                         {
                             Object.entries(current.acquisition_params).map(el =>
-                                <Form.Group className="mb-3">
+                                <Form.Group className="image-entry__form-element">
                                     <Form.Label>{prettyNames[el[0]]}</Form.Label>
                                     <Form.Control type="number" value={el[1]} onChange={e => handleChangeAcq(el[0], e.target.value)} />
                                 </Form.Group>
                             )
                         }
+                        </Form.Group>
                     </Form>
                 </Card.Body>
             </Collapse>

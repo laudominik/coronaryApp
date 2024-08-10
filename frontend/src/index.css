@@ -11,3 +11,40 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.image-entry__form-params {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr)
+}
+
+.image-entry__form-element {
+  margin: 1.2rem;
+}
+
+.image-entry__form-image-input {
+  padding: 1.2rem;
+}
+
+.image-entry__selected-image {
+  max-width: 50%;
+}
+
+.image-entry { 
+  background-color: black !important;
+  color: white !important;
+  margin: 1rem;
+}
+
+@media screen and (max-width: 1150px) {
+
+  .image-entry__form-params {
+    grid-template-columns: repeat(2, 1fr)
+  }
+}
+
+@media screen and (max-width: 650px) {
+
+  .image-entry__form-params {
+    grid-template-columns: 1fr
+  }
+}

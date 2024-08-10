@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Reconstruction from './reconstruction/Reconstruction';
 import Generation from './generation/Generation';
 import Description from './description/Description';
-import Manual from './manual/Manual';
+import Manual from './reconstruction/manual/Manual';
 
 function App() {
   return (
