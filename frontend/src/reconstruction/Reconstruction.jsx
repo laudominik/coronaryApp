@@ -19,14 +19,13 @@ export default function Reconstruction() {
                     error == "" ? <></> :
                         <span style={{ color: 'red' }}> ERROR: {error} </span>
                 }
-                <div style={{ width: '60%', display: 'flex', justifyContent: 'space-between', padding: 0 }}>
+                
+                <div className='utils__container utils__reconstruction-buttons-wrapper'>
                     <AddImageButton />
                     <StartReconstructionButton />
-                </div>
-                <div style={{ width: '60%' }}>
-                    <ImageList />
-                </div>
 
+                </div>
+                <ImageList />
             </center>
         </main>
     )
