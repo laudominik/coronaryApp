@@ -7,7 +7,7 @@ export default function ImageList() {
     const xrays = useSyncExternalStore(xraysContext.subscribe(), xraysContext.get())
 
     return (
-        <div class="utils__container">
+        <div className="utils__container">
             {
                 xrays.map((_, ix) => <ImageEntry key={xrays[ix].id} ix={ix} />)
             }

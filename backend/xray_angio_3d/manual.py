@@ -57,7 +57,7 @@ def __extract_function_parameters(point_a, point_b):
 
 
 def __extract_line_between_points(bifurcation_point, origin):
-    number_of_mapped_points = 200
+    number_of_mapped_points = 400
     line_multiplier = (bifurcation_point - origin) / number_of_mapped_points
     line = [origin + i * line_multiplier for i in range(number_of_mapped_points)]
     return line

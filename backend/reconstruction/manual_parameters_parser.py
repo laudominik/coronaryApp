@@ -14,7 +14,7 @@ class ManualParametersParser:
         images, selected_point = self.__extract_image_and_point_from_body(request_body)
         if images is None or selected_point is None:
             raise ValueError("Incorrect request body, missing images or point")
-        images_info = [self.__extract_info_from_image(image) for image in images]
+        images_info = [self.__extract_info_from_image_with_details(image) for image in images]
         point_info = self.__map_selected_point_to_required_information(selected_point)
         return images_info, point_info
 
