@@ -111,15 +111,15 @@ export default function GenerationParamsList() {
                     <MDBCol lg="9" xl="7">
                         <MDBCard className="rounded-3">
                             <MDBCardBody className="p-4">
-                                <h4 className="text-center my-3 pb-3">X-ray generation</h4>
+                                <h4 id='pageTitle' className="text-center my-3 pb-3">X-ray generation</h4>
                                 {
                                     error == "" ? <></> :
                                         <span style={{ color: 'red' }}> ERROR: {error} </span>
                                 }
                                 <br />
-                                <Button variant="success" style={buttonStyle} onClick={generate}>Generate</Button> <br/>
-                                <Button variant="warning" style={buttonStyle} onClick={handleLoadToAutoReconstruction}>Load to <b>automatic</b> reconstruction</Button>
-                                <Button variant="danger" style={buttonStyle} onClick={handleLoadToManualReconstruction}>Load to <b>manual</b> reconstruction</Button>
+                                <Button id="startGeneration" variant="success" style={buttonStyle} onClick={generate}>Generate</Button> <br/>
+                                <Button id="loadToAuto" variant="warning" style={buttonStyle} onClick={handleLoadToAutoReconstruction}>Load to <b>automatic</b> reconstruction</Button>
+                                <Button id="loadToManual" variant="danger" style={buttonStyle} onClick={handleLoadToManualReconstruction}>Load to <b>manual</b> reconstruction</Button>
                                 {/* <Form>
                                     <Form.Group>
                                         <center>
@@ -149,7 +149,7 @@ export default function GenerationParamsList() {
                                         <tr>
                                             <td colSpan={7}>
                                                 <center>
-                                                    <Button onClick={addProjection}><FontAwesomeIcon icon={faPlus} /></Button>
+                                                    <Button id="addButton" onClick={addProjection}><FontAwesomeIcon icon={faPlus} /></Button>
                                                 </center>
                                             </td>
                                         </tr>
