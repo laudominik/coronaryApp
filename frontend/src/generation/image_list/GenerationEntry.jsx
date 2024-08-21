@@ -36,13 +36,13 @@ export default function GenerationEntry({ ix }) {
 
     return (
         <>
-            <tr>
+            <tr id={"row_"+ix}>
                 <th scope="row">{ix + 1}</th>
-                <td>
+                <td class={current.generated ? "generated" : "non-generated"}>
                     <FontAwesomeIcon icon={current.generated ? faCheck : faXmark} />
                 </td>
                 {editableKeys.map(el =>
-                    <td><Form.Control type='number' value={acq[el]} onChange={e => handleChange(el, e.target.value)} /></td>
+                    <td id={"row_" + ix + "_" + el}><Form.Control type='number' value={acq[el]} onChange={e => handleChange(el, e.target.value)} /></td>
                 )}
                 <td>
                     <div style={{ display: 'flex', gap: '10px' }}>
