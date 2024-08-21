@@ -8,6 +8,7 @@ export default function ImageCanva({ ix, line, pointSetEv }) {
 
     const canvasRef = useRef(null);
     const [point, setPoint] = useState(null);
+    const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -15,11 +16,15 @@ export default function ImageCanva({ ix, line, pointSetEv }) {
         const img = new Image();
         img.src = current.image;
         img.onload = () => {
+            setDimensions({
+                width: img.width,
+                height: img.height
+            })
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             if (point) {
                 drawPoint(ctx, point.x, point.y);
             }
-            if (line?.length === 2) {
+            if (line?.length === 2 && line[0] && line[1]) {
                 drawLine(ctx, line[0], line[1])
             }
         }
@@ -44,15 +49,11 @@ export default function ImageCanva({ ix, line, pointSetEv }) {
 
     const drawLine = (ctx, a, b) => {
         const canvas = ctx.canvas;
-        const width = canvas.width;
 
-        console.log(current.image)
-    
-        a = a * 512 / 400 //TODO get from src
         const x1 = 0;
-        const x2 = width;
-        let y1 = a * x1 + b;
-        let y2 = a * x2 + b;
+        const x2 = canvas.width;
+        let y1 = b;
+        let y2 = a * dimensions.width + b;
 
     
         ctx.beginPath();
