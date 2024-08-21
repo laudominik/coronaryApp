@@ -9,39 +9,57 @@ export default function ImageCanvas() {
     const xrays = useSyncExternalStore(xraysContext.subscribe(), xraysContext.get())
     let points = []
 
-    function onPointSet(point) {
+    async function onPointSet(point) {
         points = [...points, point]
         if(points.length === 1) {
-            const linesRequest = sendLinesRequest()
+            const linesRequest = await sendLinesRequest()
             setLinesForChildren(linesRequest, point.image_index)
         }
         points = []
-        //check if first
-            //send request for lines
-            //set lines for each child except id
         //else check if second
             //send request for reconstruction (event for parent)
             //set reconstruction result
             //clear lines and points on children -> method called from parent
     }
 
-    function sendLinesRequest() {
-        const url = config["LINES_ENDPOINT"]/*
+    async function sendLinesRequest() {
+        const url = config["LINES_ENDPOINT"]
+        const images = await Promise.all(xrays.map(async (xray) => {
+            const dimensions = await getImageDimensions(xray.image)
+            return {
+                [`acquisition_params`]: {
+                    sid: xray.acquisition_params.sid,
+                    sod: xray.acquisition_params.sod,
+                    alpha: xray.acquisition_params.alpha,
+                    beta: xray.acquisition_params.beta,
+                    spacing_c: xray.acquisition_params.spacing_c,
+                    spacing_r: xray.acquisition_params.spacing_r,
+                },
+                [`image`]: {
+                    width: dimensions.width,
+                    height: dimensions.height
+                }
+            }
+        }))
+
+        //TODO extract to another method
+        //TODO handle error
+
         const responseAsync = fetch(url, {
             method: 'POST',
-            body: {
-                "images": xraysContext.serialized(),
+            body: JSON.stringify({
+                "images": images,
                 "point": points[0]
-            },
+            }),
             headers: {
-                'Content-Type': 'text/plain',
+                'Content-Type': 'application/json',
             }
-        })*/
+        }) 
         try {
-            return {"a": [-0.8792985953094256],"b": [390.08426994212505]} //SWAP TO REQUEST
+            return (await responseAsync).json()
 
         } catch (e) {
-            return [];
+            return {"a": [], "b": []};
         }
     }
 
@@ -57,6 +75,16 @@ export default function ImageCanvas() {
             ...array.slice(index)
         ];  
     };
+
+    async function getImageDimensions(src) {
+        return new Promise (function (resolved, _) {
+          let image = new Image()
+          image.onload = () => {
+            resolved({width: image.width, height: image.height})
+          };
+          image.src = src
+        })
+      }
     
 
     return (

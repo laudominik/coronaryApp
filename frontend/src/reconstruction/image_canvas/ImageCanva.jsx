@@ -37,7 +37,7 @@ export default function ImageCanva({ ix, line, pointSetEv }) {
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
         setPoint({ x, y });
-        pointSetEv({x, y, "image_index": ix})
+        pointSetEv({x: x*dimensions.width/canvas.width , y: y*dimensions.height/canvas.height, "image_index": ix})
     }
 
     const drawPoint = (ctx, x, y) => {
