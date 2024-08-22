@@ -1,12 +1,15 @@
 import { useContext, useState, useSyncExternalStore } from "react";
 import ImageCanva from "./ImageCanva";
-import { XRaysStoreContext } from "../reconstructionStore";
-import config from "../../config.json"
+import CanvasColorPicker from "./CanvasColorPicker";
+import { XRaysStoreContext } from "../../reconstructionStore";
+import config from "../../../config.json"
 
 export default function ImageCanvas() {
     const [lines, setLines] = useState([]);
     const xraysContext = useContext(XRaysStoreContext)
     const xrays = useSyncExternalStore(xraysContext.subscribe(), xraysContext.get())
+    const [linesColor, setLinesColor] = useState("#FF0000")
+    const [pointsColor, setPointsColor] = useState("#00FF00")
     let points = []
 
     async function onPointSet(point) {
@@ -92,9 +95,13 @@ export default function ImageCanvas() {
             <div className="canvas__title">
                 <h2>Zaznacz dwa punkty na załadowanych zdjęciach</h2>
             </div>
+            <div className="canvas__color-pickers">
+                <CanvasColorPicker initColor={linesColor} onColorChanged={setLinesColor} title={"Kolor linii"} />
+                <CanvasColorPicker initColor={pointsColor} onColorChanged={setPointsColor} title={"Kolor punktu"}/>
+            </div>
             <div className="canvas__container">
             {
-                xrays.map((_, ix) => <ImageCanva key={xrays[ix].id} ix={ix} line={lines[ix]} pointSetEv={onPointSet} />)
+                xrays.map((_, ix) => <ImageCanva key={xrays[ix].id} ix={ix} line={lines[ix]} pointSetEv={onPointSet} lineColor={linesColor} pointColor={pointsColor} />)
             }
             </div>
         </div>

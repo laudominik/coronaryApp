@@ -1,7 +1,7 @@
 import {useRef, useEffect, useContext, useState, useSyncExternalStore } from 'react';
-import { XRaysStoreContext } from '../reconstructionStore';
+import { XRaysStoreContext } from '../../reconstructionStore';
 
-export default function ImageCanva({ ix, line, pointSetEv }) {
+export default function ImageCanva({ ix, line, pointSetEv, lineColor, pointColor }) {
     const xraysContext = useContext(XRaysStoreContext)
     const xrays = useSyncExternalStore(xraysContext.subscribe(), xraysContext.get())
     const current = xrays[ix]
@@ -29,7 +29,7 @@ export default function ImageCanva({ ix, line, pointSetEv }) {
             }
         }
         
-    }, [point, line, current.image]);
+    }, [point, line, current.image, lineColor, pointColor]);
 
     const handleClick = (event) => {
         const canvas = canvasRef.current;
@@ -41,7 +41,7 @@ export default function ImageCanva({ ix, line, pointSetEv }) {
     }
 
     const drawPoint = (ctx, x, y) => {
-        ctx.fillStyle = 'red';
+        ctx.fillStyle = pointColor;
         ctx.beginPath();
         ctx.arc(x, y, 5, 0, 2 * Math.PI);
         ctx.fill();
@@ -49,17 +49,18 @@ export default function ImageCanva({ ix, line, pointSetEv }) {
 
     const drawLine = (ctx, a, b) => {
         const canvas = ctx.canvas;
-
         const x1 = 0;
         const x2 = canvas.width;
-        let y1 = b;
-        let y2 = a * dimensions.width + b;
+
+        const scale = canvas.height / dimensions.height; 
+        const y1 = b * scale
+        const y2 = (a * dimensions.width + b) * scale
 
     
         ctx.beginPath();
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
-        ctx.strokeStyle = 'blue';
+        ctx.strokeStyle = lineColor;
         ctx.lineWidth = 2;
         ctx.stroke();
     };

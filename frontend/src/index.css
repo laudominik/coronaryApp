@@ -50,8 +50,25 @@ code {
 }
 
 .canvas__title {
+  padding: 1rem;
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-weight: 1900;
+}
+
+.canvas__color-pickers {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 1rem;
+}
+
+.color-picker {
+  margin: 1rem;
+}
+
+.color-picker__title {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 1.6rem;
 }
 
 .canvas__container {
@@ -68,6 +85,16 @@ code {
 
 .canva__image {
   max-width: 100px;
+}
+
+.sketch-picker {
+  width: 400px !important;
+  box-sizing: border-box !important;
+}
+
+.sketch-picker > div:first-child {
+  box-sizing: border-box !important;
+  padding-bottom: 12rem !important;
 }
 
 @media screen and (max-width: 1150px) {

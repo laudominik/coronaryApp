@@ -1,5 +1,5 @@
 import ImageList from '../image_list/ImageList';
-import ImageCanvas from '../image_canvas/ImageCanvas';
+import ImageCanvas from './image_canvas/ImageCanvas';
 import AddImageButton from '../image_list/AddImageButton';
 import StartReconstructionButton from '../image_list/StartReconstructionButton';    
 
