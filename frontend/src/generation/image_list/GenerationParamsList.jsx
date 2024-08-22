@@ -95,7 +95,7 @@ export default function GenerationParamsList() {
             errorContext.set(TOO_FEW_GENERATED_IMGS_MSG)
             return;
         }
-        // reconstructionXrayContext.set(params.xrays) TODO: set input data after manual is ready
+        reconstructionXrayContext.set(params.xrays)
         window.location.href = "manual";
     }
 

@@ -11,6 +11,7 @@ export default function ImageCanvas() {
     const [linesColor, setLinesColor] = useState("#FF0000")
     const [pointsColor, setPointsColor] = useState("#00FF00")
     let points = []
+    //TODO handle errors
 
     async function onPointSet(point) {
         points = [...points, point]
@@ -27,26 +28,7 @@ export default function ImageCanvas() {
 
     async function sendLinesRequest() {
         const url = config["LINES_ENDPOINT"]
-        const images = await Promise.all(xrays.map(async (xray) => {
-            const dimensions = await getImageDimensions(xray.image)
-            return {
-                [`acquisition_params`]: {
-                    sid: xray.acquisition_params.sid,
-                    sod: xray.acquisition_params.sod,
-                    alpha: xray.acquisition_params.alpha,
-                    beta: xray.acquisition_params.beta,
-                    spacing_c: xray.acquisition_params.spacing_c,
-                    spacing_r: xray.acquisition_params.spacing_r,
-                },
-                [`image`]: {
-                    width: dimensions.width,
-                    height: dimensions.height
-                }
-            }
-        }))
-
-        //TODO extract to another method
-        //TODO handle error
+        const images = await createImagesRequestParameter()
 
         const responseAsync = fetch(url, {
             method: 'POST',
@@ -65,6 +47,27 @@ export default function ImageCanvas() {
             return {"a": [], "b": []};
         }
     }
+
+    async function createImagesRequestParameter() {
+        return await Promise.all(xrays.map(async (xray) => {
+            const dimensions = await getImageDimensions(xray.image)
+            return {
+                [`acquisition_params`]: {
+                    sid: xray.acquisition_params.sid,
+                    sod: xray.acquisition_params.sod,
+                    alpha: xray.acquisition_params.alpha,
+                    beta: xray.acquisition_params.beta,
+                    spacing_c: xray.acquisition_params.spacing_c,
+                    spacing_r: xray.acquisition_params.spacing_r,
+                },
+                [`image`]: {
+                    width: dimensions.width,
+                    height: dimensions.height
+                }
+            }
+        }))
+    }
+
 
     function setLinesForChildren(newLines, ix) {
         const childrenLines = {"a": addElementAt(newLines.a, ix, null), "b": addElementAt(newLines.b, ix, null)}
