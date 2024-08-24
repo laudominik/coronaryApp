@@ -1,13 +1,12 @@
 import {useRef, useEffect, useContext, useState, useSyncExternalStore } from 'react';
 import { XRaysStoreContext } from '../../reconstructionStore';
 
-export default function ImageCanva({ ix, line, pointSetEv, lineColor, pointColor }) {
+export default function ImageCanva({ ix, line, pointSetEv, lineColor, pointColor, point }) {
     const xraysContext = useContext(XRaysStoreContext)
     const xrays = useSyncExternalStore(xraysContext.subscribe(), xraysContext.get())
     const current = xrays[ix]
 
     const canvasRef = useRef(null);
-    const [point, setPoint] = useState(null);
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
     useEffect(() => {
@@ -32,12 +31,13 @@ export default function ImageCanva({ ix, line, pointSetEv, lineColor, pointColor
     }, [point, line, current.image, lineColor, pointColor]);
 
     const handleClick = (event) => {
-        const canvas = canvasRef.current;
-        const rect = canvas.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-        setPoint({ x, y });
-        pointSetEv({x: x*dimensions.width/canvas.width , y: y*dimensions.height/canvas.height, "image_index": ix})
+        if(current.image) {
+            const canvas = canvasRef.current;
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            pointSetEv({x, y, image_index: ix, x_scale: dimensions.width/canvas.width, y_scale: dimensions.height/canvas.height})    
+        }
     }
 
     const drawPoint = (ctx, x, y) => {

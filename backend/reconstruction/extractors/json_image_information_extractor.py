@@ -37,6 +37,14 @@ class JsonImageInformationExtractor:
                 continue
             else:
                 return False, param
+        if acq_params['sid'] <= 0:
+            return False, "sid"
+        elif acq_params['sod'] <= 0:
+            return False, "sod"
+        elif acq_params['spacing_r'] <= 0:
+            return False, "spacing_r"
+        elif acq_params['spacing_c'] <= 0:
+            return False, "spacing_c"
         return True, None
 
     def __get_necessary_parameters(self, acq_params, img_parameters):

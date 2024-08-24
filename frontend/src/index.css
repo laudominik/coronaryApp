@@ -97,6 +97,12 @@ code {
   padding-bottom: 12rem !important;
 }
 
+.error__text {
+  font-size: 2rem;
+  font-weight: 1000;
+  color: #BB0000;
+}
+
 @media screen and (max-width: 1150px) {
 
   .image-entry__form-params {

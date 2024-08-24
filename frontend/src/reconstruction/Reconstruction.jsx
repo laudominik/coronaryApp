@@ -17,7 +17,7 @@ export default function Reconstruction() {
                 <Viewport />
                 {
                     error == "" ? <></> :
-                        <span style={{ color: 'red' }}> ERROR: {error} </span>
+                        <span className="error__text"> ERROR: {error} </span>
                 }
                 
                 <div className='utils__container utils__reconstruction-buttons-wrapper'>

@@ -13,7 +13,7 @@ def manual_reconstruction_worker(request):
         request_body = json.loads(request.body)
         images_info, points_info = parameters_parser.parse_reconstruction_request(request_body)
     except Exception as e:
-        return JsonResponse({"status": 400, "message": "Bad request", "reason": str(e)})
+        return JsonResponse({"message": "Bad request", "reason": str(e)}, status=400)
 
     print("[POINT] finding...")
     point = find_point(points_info, images_info)
@@ -23,6 +23,5 @@ def manual_reconstruction_worker(request):
         "x": point.x,
         "y": point.y,
         "z": point.z,
-        "status": 200,
         "message": "OK"
     })

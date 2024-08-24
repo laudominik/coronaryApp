@@ -1,32 +1,58 @@
 import { useContext, useState, useSyncExternalStore } from "react";
 import ImageCanva from "./ImageCanva";
 import CanvasColorPicker from "./CanvasColorPicker";
-import { XRaysStoreContext } from "../../reconstructionStore";
+import { ReconstructionErrorStoreContext, XRaysStoreContext } from "../../reconstructionStore";
 import config from "../../../config.json"
 
-export default function ImageCanvas() {
+export default function ImageCanvas({onReconstructionReady}) {
     const [lines, setLines] = useState([]);
+    const [points, setPoints] = useState([]);
     const xraysContext = useContext(XRaysStoreContext)
+    const errorContext = useContext(ReconstructionErrorStoreContext)
     const xrays = useSyncExternalStore(xraysContext.subscribe(), xraysContext.get())
     const [linesColor, setLinesColor] = useState("#FF0000")
     const [pointsColor, setPointsColor] = useState("#00FF00")
-    let points = []
-    //TODO handle errors
+    const [markedPoint, setMarkedPoint] = useState(null)
 
     async function onPointSet(point) {
-        points = [...points, point]
-        if(points.length === 1) {
-            const linesRequest = await sendLinesRequest()
-            setLinesForChildren(linesRequest, point.image_index)
+        errorContext.set("")
+        try {
+            if(markedPoint == null || markedPoint.image_index === point.image_index) {
+                const linesRequest = await sendLinesRequest(point)
+                const linesBody = await linesRequest.json()
+                if(linesRequest.status !== 200) {
+                    errorContext.set(`${linesBody.message} - ${linesBody.reason}`)
+                    clearAfterError()
+                    return;
+                }
+                setLinesForChildren(linesBody, point.image_index)
+                setMarkedPoint(point)
+                setChildrenPoints([point])
+            }
+            else if (!!markedPoint) {
+                setMarkedPoint(null)
+                setLines([])
+                setChildrenPoints([markedPoint, point])
+                onReconstructionReady({first: markedPoint, second: point})
+            }
+        } catch (e) {
+            errorContext.set("Backend error")
         }
-        points = []
-        //else check if second
-            //send request for reconstruction (event for parent)
-            //set reconstruction result
-            //clear lines and points on children -> method called from parent
     }
 
-    async function sendLinesRequest() {
+    function clearAfterError() {
+        setMarkedPoint(null)
+        setLines([])
+        setChildrenPoints([])
+    }
+
+    function setChildrenPoints(points) {
+        const newPoints = xrays.map((_, ix) => null)
+        points.forEach(point => newPoints[point.image_index] = point)
+        setPoints(newPoints)
+    }
+
+    async function sendLinesRequest(point) {
         const url = config["LINES_ENDPOINT"]
         const images = await createImagesRequestParameter()
 
@@ -34,18 +60,13 @@ export default function ImageCanvas() {
             method: 'POST',
             body: JSON.stringify({
                 "images": images,
-                "point": points[0]
+                point: scaledPoint(point)
             }),
             headers: {
                 'Content-Type': 'application/json',
             }
         }) 
-        try {
-            return (await responseAsync).json()
-
-        } catch (e) {
-            return {"a": [], "b": []};
-        }
+        return await responseAsync
     }
 
     async function createImagesRequestParameter() {
@@ -53,12 +74,12 @@ export default function ImageCanvas() {
             const dimensions = await getImageDimensions(xray.image)
             return {
                 [`acquisition_params`]: {
-                    sid: xray.acquisition_params.sid,
-                    sod: xray.acquisition_params.sod,
-                    alpha: xray.acquisition_params.alpha,
-                    beta: xray.acquisition_params.beta,
-                    spacing_c: xray.acquisition_params.spacing_c,
-                    spacing_r: xray.acquisition_params.spacing_r,
+                    sid: parseFloat(xray.acquisition_params.sid),
+                    sod: parseFloat(xray.acquisition_params.sod),
+                    alpha: parseFloat(xray.acquisition_params.alpha),
+                    beta: parseFloat(xray.acquisition_params.beta),
+                    spacing_c: parseFloat(xray.acquisition_params.spacing_c),
+                    spacing_r: parseFloat(xray.acquisition_params.spacing_r),
                 },
                 [`image`]: {
                     width: dimensions.width,
@@ -82,6 +103,14 @@ export default function ImageCanvas() {
         ];  
     };
 
+    function scaledPoint(point) {
+        return {
+            x: point.x * point.x_scale,
+            y: point.y * point.y_scale,
+            image_index: point.image_index
+        }
+    }
+
     async function getImageDimensions(src) {
         return new Promise (function (resolved, _) {
           let image = new Image()
@@ -104,7 +133,7 @@ export default function ImageCanvas() {
             </div>
             <div className="canvas__container">
             {
-                xrays.map((_, ix) => <ImageCanva key={xrays[ix].id} ix={ix} line={lines[ix]} pointSetEv={onPointSet} lineColor={linesColor} pointColor={pointsColor} />)
+                xrays.map((_, ix) => <ImageCanva key={xrays[ix].id} ix={ix} line={lines[ix]} point={points[ix]} pointSetEv={onPointSet} lineColor={linesColor} pointColor={pointsColor} />)
             }
             </div>
         </div>

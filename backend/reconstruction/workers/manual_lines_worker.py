@@ -14,7 +14,7 @@ def manual_lines_worker(request):
         request_body = json.loads(request.body)
         images_info, point_info = parameters_parser.parse_lines_request(request_body)
     except Exception as e:
-        return JsonResponse({"status": 400, "message": "Bad request", "reason": str(e)})
+        return JsonResponse({"message": "Bad request", "reason": str(e)}, status=400)
     print("[LINES] finding...")
     lines = find_lines(point_info, images_info)
     print("[LINES] found")
@@ -22,6 +22,5 @@ def manual_lines_worker(request):
     return JsonResponse({
         "a": [a for (a, b) in lines],
         "b": [b for (a, b) in lines],
-        "status": 200,
         "message": "OK"
     })
