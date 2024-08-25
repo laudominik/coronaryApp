@@ -1,23 +1,22 @@
 import { useContext, useState, useSyncExternalStore } from "react";
 import ImageCanva from "./ImageCanva";
 import CanvasColorPicker from "./CanvasColorPicker";
-import { ReconstructionErrorStoreContext, XRaysStoreContext } from "../../reconstructionStore";
+import { ManualErrorStoreContext, CanvasStoreContext, XRaysStoreContext, ColorsStoreContext } from "../manualStore";
 import config from "../../../config.json"
 
 export default function ImageCanvas({onReconstructionReady}) {
-    const [lines, setLines] = useState([]);
-    const [points, setPoints] = useState([]);
     const xraysContext = useContext(XRaysStoreContext)
-    const errorContext = useContext(ReconstructionErrorStoreContext)
+    const errorContext = useContext(ManualErrorStoreContext)
+    const canvasContext = useContext(CanvasStoreContext)
+    const colorsContext = useContext(ColorsStoreContext)
     const xrays = useSyncExternalStore(xraysContext.subscribe(), xraysContext.get())
-    const [linesColor, setLinesColor] = useState("#FF0000")
-    const [pointsColor, setPointsColor] = useState("#00FF00")
-    const [markedPoint, setMarkedPoint] = useState(null)
+    const canvasData = useSyncExternalStore(canvasContext.subscribe(), canvasContext.get())
+    const colors = useSyncExternalStore(colorsContext.subscribe(), colorsContext.get())
 
     async function onPointSet(point) {
         errorContext.set("")
         try {
-            if(markedPoint == null || markedPoint.image_index === point.image_index) {
+            if(canvasData.markedPoint == null || canvasData.markedPoint.image_index === point.image_index) {
                 const linesRequest = await sendLinesRequest(point)
                 const linesBody = await linesRequest.json()
                 if(linesRequest.status !== 200) {
@@ -25,15 +24,14 @@ export default function ImageCanvas({onReconstructionReady}) {
                     clearAfterError()
                     return;
                 }
-                setLinesForChildren(linesBody, point.image_index)
-                setMarkedPoint(point)
-                setChildrenPoints([point])
+                const childrenLines = getLinesForChildren(linesBody, point.image_index)
+                const childrenPoints = getChildrenPoints([point])
+                setCanvasData(childrenLines, childrenPoints, point)
             }
-            else if (!!markedPoint) {
-                setMarkedPoint(null)
-                setLines([])
-                setChildrenPoints([markedPoint, point])
-                onReconstructionReady({first: markedPoint, second: point})
+            else if (!!canvasData.markedPoint) {
+                const childrenPoints = getChildrenPoints([canvasData.markedPoint, point])
+                setCanvasData([], childrenPoints, null)
+                onReconstructionReady({first: canvasData.markedPoint, second: point})
             }
         } catch (e) {
             errorContext.set("Backend error")
@@ -41,15 +39,13 @@ export default function ImageCanvas({onReconstructionReady}) {
     }
 
     function clearAfterError() {
-        setMarkedPoint(null)
-        setLines([])
-        setChildrenPoints([])
+        setCanvasData([], [], null)
     }
 
-    function setChildrenPoints(points) {
+    function getChildrenPoints(points) {
         const newPoints = xrays.map((_, ix) => null)
         points.forEach(point => newPoints[point.image_index] = point)
-        setPoints(newPoints)
+        return newPoints;
     }
 
     async function sendLinesRequest(point) {
@@ -89,10 +85,9 @@ export default function ImageCanvas({onReconstructionReady}) {
         }))
     }
 
-
-    function setLinesForChildren(newLines, ix) {
+    function getLinesForChildren(newLines, ix) {
         const childrenLines = {"a": addElementAt(newLines.a, ix, null), "b": addElementAt(newLines.b, ix, null)}
-        setLines(childrenLines.a.map((item, index) => [item, childrenLines.b[index]]))
+        return childrenLines.a.map((item, index) => [item, childrenLines.b[index]])
     }
     
     function addElementAt(array, index, element) {
@@ -120,6 +115,18 @@ export default function ImageCanvas({onReconstructionReady}) {
           image.src = src
         })
       }
+
+    function setLinesColor(color) {
+        colorsContext.set({points: colors.points, lines: color})
+    }
+
+    function setPointsColor(color) {
+        colorsContext.set({points: color, lines: colors.lines})
+    }
+
+    function setCanvasData(lines, points, markedPoint) {
+        canvasContext.set({lines: lines, points: points, markedPoint: markedPoint})
+    }
     
 
     return (
@@ -128,12 +135,12 @@ export default function ImageCanvas({onReconstructionReady}) {
                 <h2>Zaznacz dwa punkty na załadowanych zdjęciach</h2>
             </div>
             <div className="canvas__color-pickers">
-                <CanvasColorPicker initColor={linesColor} onColorChanged={setLinesColor} title={"Kolor linii"} />
-                <CanvasColorPicker initColor={pointsColor} onColorChanged={setPointsColor} title={"Kolor punktu"}/>
+                <CanvasColorPicker initColor={colors.lines} onColorChanged={setLinesColor} title={"Kolor linii"} />
+                <CanvasColorPicker initColor={colors.points} onColorChanged={setPointsColor} title={"Kolor punktu"}/>
             </div>
             <div className="canvas__container">
             {
-                xrays.map((_, ix) => <ImageCanva key={xrays[ix].id} ix={ix} line={lines[ix]} point={points[ix]} pointSetEv={onPointSet} lineColor={linesColor} pointColor={pointsColor} />)
+                xrays.map((_, ix) => <ImageCanva key={xrays[ix].id} ix={ix} line={canvasData.lines[ix]} point={canvasData.points[ix]} pointSetEv={onPointSet} lineColor={colors.lines} pointColor={colors.points} />)
             }
             </div>
         </div>

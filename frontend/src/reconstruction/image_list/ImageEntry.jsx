@@ -14,9 +14,8 @@ const prettyNames = {
 }
 
 
-export default function ImageEntry({ ix }) {
+export default function ImageEntry({ ix, xraysContext }) {
     const [open, setOpen] = useState(false);
-    const xraysContext = useContext(XRaysStoreContext)
     const xrays = useSyncExternalStore(xraysContext.subscribe(), xraysContext.get())
     const current = xrays[ix]
 

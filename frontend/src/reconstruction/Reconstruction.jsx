@@ -1,13 +1,13 @@
 import Viewport from "./viewport/Viewport";
 import ImageList from './image_list/ImageList';
-import { Container, Row, Col } from 'react-bootstrap';
-import { useContext, useEffect, useState, useSyncExternalStore } from 'react';
+import { useContext, useSyncExternalStore } from 'react';
 import AddImageButton from './image_list/AddImageButton';
 import StartReconstructionButton from './image_list/StartReconstructionButton';
-import { ReconstructionErrorStoreContext } from './reconstructionStore';
+import { ReconstructionErrorStoreContext, XRaysStoreContext } from './reconstructionStore';
 
 export default function Reconstruction() {
 
+    const xraysContext = useContext(XRaysStoreContext)
     const errorContext = useContext(ReconstructionErrorStoreContext)
     const error = useSyncExternalStore(errorContext.subscribe(), errorContext.get())
 
@@ -16,7 +16,7 @@ export default function Reconstruction() {
             <center>
                 <Viewport />
                 {
-                    error == "" ? <></> :
+                    error === "" ? <></> :
                         <span className="error__text"> ERROR: {error} </span>
                 }
                 
@@ -25,7 +25,7 @@ export default function Reconstruction() {
                     <StartReconstructionButton />
 
                 </div>
-                <ImageList />
+                <ImageList xraysContext={xraysContext} />
             </center>
         </main>
     )

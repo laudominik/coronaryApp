@@ -1,15 +1,13 @@
-import { useContext, useSyncExternalStore } from "react";
+import { useSyncExternalStore } from "react";
 import ImageEntry from "./ImageEntry";
-import { XRaysStoreContext } from "../reconstructionStore";
 
-export default function ImageList() {
-    const xraysContext = useContext(XRaysStoreContext)
+export default function ImageList({xraysContext}) {
     const xrays = useSyncExternalStore(xraysContext.subscribe(), xraysContext.get())
 
     return (
         <div className="utils__container">
             {
-                xrays.map((_, ix) => <ImageEntry key={xrays[ix].id} ix={ix} />)
+                xrays.map((_, ix) => <ImageEntry key={xrays[ix].id} ix={ix} xraysContext={xraysContext} />)
             }
         </div>
 

@@ -21,6 +21,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import GenerationParams from "../generationParams";
 import { XRaysStoreContext } from "../../reconstruction/reconstructionStore";
+import { XRaysStoreContext as ManualStoreContext  } from "../../reconstruction/manual/manualStore";
 
 const TOO_FEW_GENERATED_IMGS_MSG = "to load images to reconstruction there has to be at least two images (generated)"
 
@@ -33,6 +34,7 @@ export default function GenerationParamsList() {
 
     // reconstruction!
     const reconstructionXrayContext = useContext(XRaysStoreContext)
+    const manualXrayContext = useContext(ManualStoreContext)
 
     async function generate() {
         if (disabled) return;
@@ -95,7 +97,7 @@ export default function GenerationParamsList() {
             errorContext.set(TOO_FEW_GENERATED_IMGS_MSG)
             return;
         }
-        reconstructionXrayContext.set(params.xrays)
+        manualXrayContext.set(params.xrays)
         window.location.href = "manual";
     }
 

@@ -3,13 +3,14 @@ import ImageList from '../image_list/ImageList';
 import ImageCanvas from './image_canvas/ImageCanvas';
 import AddImageButton from '../image_list/AddImageButton';
 import StartReconstructionButton from '../image_list/StartReconstructionButton';    
-import { ReconstructionErrorStoreContext } from '../reconstructionStore';
+import { ManualErrorStoreContext, XRaysStoreContext } from './manualStore';
 
 
 export default function Manual() {
 
-    const errorContext = useContext(ReconstructionErrorStoreContext)
+    const xraysContext = useContext(XRaysStoreContext)
 
+    const errorContext = useContext(ManualErrorStoreContext)
     const error = useSyncExternalStore(errorContext.subscribe(), errorContext.get())
 
     function onReconstructionReady(points) {
@@ -29,7 +30,7 @@ export default function Manual() {
                     <StartReconstructionButton />
                 </div>
                 <ImageCanvas onReconstructionReady={onReconstructionReady} />
-                <ImageList />
+                <ImageList xraysContext={xraysContext} />
             </center>
         </main>
     )

@@ -1,5 +1,5 @@
-import {useRef, useEffect, useContext, useState, useSyncExternalStore } from 'react';
-import { XRaysStoreContext } from '../../reconstructionStore';
+import {useRef, useEffect, useContext, useState, useSyncExternalStore, useCallback } from 'react';
+import { XRaysStoreContext } from '../manualStore';
 
 export default function ImageCanva({ ix, line, pointSetEv, lineColor, pointColor, point }) {
     const xraysContext = useContext(XRaysStoreContext)
@@ -8,6 +8,31 @@ export default function ImageCanva({ ix, line, pointSetEv, lineColor, pointColor
 
     const canvasRef = useRef(null);
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+    const drawPoint = useCallback((ctx, x, y) => {
+        ctx.fillStyle = pointColor;
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, 2 * Math.PI);
+        ctx.fill();
+    }, [pointColor]);
+
+    const drawLine = useCallback((ctx, a, b) => {
+        const canvas = ctx.canvas;
+        const x1 = 0;
+        const x2 = canvas.width;
+
+        const scale = canvas.height / dimensions.height; 
+        const y1 = b * scale
+        const y2 = (a * dimensions.width + b) * scale
+
+    
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = lineColor;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }, [lineColor, dimensions]);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -27,8 +52,7 @@ export default function ImageCanva({ ix, line, pointSetEv, lineColor, pointColor
                 drawLine(ctx, line[0], line[1])
             }
         }
-        
-    }, [point, line, current.image, lineColor, pointColor]);
+    }, [point, line, current.image, lineColor, pointColor, drawLine, drawPoint]);
 
     const handleClick = (event) => {
         if(current.image) {
@@ -39,31 +63,6 @@ export default function ImageCanva({ ix, line, pointSetEv, lineColor, pointColor
             pointSetEv({x, y, image_index: ix, x_scale: dimensions.width/canvas.width, y_scale: dimensions.height/canvas.height})    
         }
     }
-
-    const drawPoint = (ctx, x, y) => {
-        ctx.fillStyle = pointColor;
-        ctx.beginPath();
-        ctx.arc(x, y, 5, 0, 2 * Math.PI);
-        ctx.fill();
-    };
-
-    const drawLine = (ctx, a, b) => {
-        const canvas = ctx.canvas;
-        const x1 = 0;
-        const x2 = canvas.width;
-
-        const scale = canvas.height / dimensions.height; 
-        const y1 = b * scale
-        const y2 = (a * dimensions.width + b) * scale
-
-    
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.strokeStyle = lineColor;
-        ctx.lineWidth = 2;
-        ctx.stroke();
-    };
 
     return (
         <section>
