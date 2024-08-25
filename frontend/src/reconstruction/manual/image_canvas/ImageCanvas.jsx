@@ -117,11 +117,11 @@ export default function ImageCanvas({onReconstructionReady}) {
       }
 
     function setLinesColor(color) {
-        colorsContext.set({points: colors.points, lines: color})
+        colorsContext.set({point: colors.point, line: color})
     }
 
     function setPointsColor(color) {
-        colorsContext.set({points: color, lines: colors.lines})
+        colorsContext.set({point: color, line: colors.line})
     }
 
     function setCanvasData(lines, points, markedPoint) {
@@ -135,12 +135,12 @@ export default function ImageCanvas({onReconstructionReady}) {
                 <h2>Zaznacz dwa punkty na załadowanych zdjęciach</h2>
             </div>
             <div className="canvas__color-pickers">
-                <CanvasColorPicker initColor={colors.lines} onColorChanged={setLinesColor} title={"Kolor linii"} />
-                <CanvasColorPicker initColor={colors.points} onColorChanged={setPointsColor} title={"Kolor punktu"}/>
+                <CanvasColorPicker initColor={colors.line} onColorChanged={setLinesColor} title={"Kolor linii"} />
+                <CanvasColorPicker initColor={colors.point} onColorChanged={setPointsColor} title={"Kolor punktu"}/>
             </div>
             <div className="canvas__container">
             {
-                xrays.map((_, ix) => <ImageCanva key={xrays[ix].id} ix={ix} line={canvasData.lines[ix]} point={canvasData.points[ix]} pointSetEv={onPointSet} lineColor={colors.lines} pointColor={colors.points} />)
+                xrays.map((_, ix) => <ImageCanva key={xrays[ix].id} ix={ix} pointSetEv={onPointSet} />)
             }
             </div>
         </div>
