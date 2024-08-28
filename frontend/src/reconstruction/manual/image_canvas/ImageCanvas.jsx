@@ -1,25 +1,24 @@
-import { useContext, useState, useSyncExternalStore } from "react";
+import { useContext, useSyncExternalStore } from "react";
 import ImageCanva from "./ImageCanva";
 import CanvasColorPicker from "./CanvasColorPicker";
-import { ManualErrorStoreContext, CanvasStoreContext, XRaysStoreContext, ColorsStoreContext } from "../manualStore";
-import config from "../../../config.json"
+import { ManualErrorStoreContext, ManualDataStoreContext, XRaysStoreContext, ColorsStoreContext } from "../manualStore";
+import { sendLinesRequest } from "../manualService";
 
 export default function ImageCanvas() {
     const xraysContext = useContext(XRaysStoreContext)
     const errorContext = useContext(ManualErrorStoreContext)
-    const canvasContext = useContext(CanvasStoreContext)
+    const manualDataContext = useContext(ManualDataStoreContext)
     const colorsContext = useContext(ColorsStoreContext)
     const xrays = useSyncExternalStore(xraysContext.subscribe(), xraysContext.get())
-    const canvasData = useSyncExternalStore(canvasContext.subscribe(), canvasContext.get())
+    const manualData = useSyncExternalStore(manualDataContext.subscribe(), manualDataContext.get())
     const colors = useSyncExternalStore(colorsContext.subscribe(), colorsContext.get())
 
     async function onPointSet(point) {
         errorContext.set("")
-        const markedPoint = canvasData.markedPoints?.[0]
-        console.log(canvasData.markedPoints)
+        const markedPoint = manualData.markedPoints?.[0]
         try {
-            if(canvasData.markedPoints?.length !== 1 || markedPoint?.image_index === point.image_index) {
-                const linesRequest = await sendLinesRequest(point)
+            if(manualData.markedPoints?.length !== 1 || markedPoint?.image_index === point.image_index) {
+                const linesRequest = await sendLinesRequest(xrays, point)
                 const linesBody = await linesRequest.json()
                 if(linesRequest.status !== 200) {
                     errorContext.set(`${linesBody.message} - ${linesBody.reason}`)
@@ -30,12 +29,11 @@ export default function ImageCanvas() {
                     setCanvasData(childrenLines, childrenPoints, [point])
                 }
             }
-            else if (canvasData.markedPoints?.length === 1) {
+            else if (manualData.markedPoints?.length === 1) {
                 const childrenPoints = getChildrenPoints([markedPoint, point])
                 setCanvasData([], childrenPoints, [markedPoint, point])
             }
         } catch (e) {
-            console.log(point)
             errorContext.set("Backend error")
         }
     }
@@ -48,43 +46,6 @@ export default function ImageCanvas() {
         const newPoints = xrays.map((_, ix) => null)
         points.forEach(point => newPoints[point.image_index] = point)
         return newPoints;
-    }
-
-    async function sendLinesRequest(point) {
-        const url = config["LINES_ENDPOINT"]
-        const images = await createImagesRequestParameter()
-
-        const responseAsync = fetch(url, {
-            method: 'POST',
-            body: JSON.stringify({
-                "images": images,
-                point: scaledPoint(point)
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        }) 
-        return await responseAsync
-    }
-
-    async function createImagesRequestParameter() {
-        return await Promise.all(xrays.map(async (xray) => {
-            const dimensions = await getImageDimensions(xray.image)
-            return {
-                [`acquisition_params`]: {
-                    sid: parseFloat(xray.acquisition_params.sid),
-                    sod: parseFloat(xray.acquisition_params.sod),
-                    alpha: parseFloat(xray.acquisition_params.alpha),
-                    beta: parseFloat(xray.acquisition_params.beta),
-                    spacing_c: parseFloat(xray.acquisition_params.spacing_c),
-                    spacing_r: parseFloat(xray.acquisition_params.spacing_r),
-                },
-                [`image`]: {
-                    width: dimensions.width,
-                    height: dimensions.height
-                }
-            }
-        }))
     }
 
     function getLinesForChildren(newLines, ix) {
@@ -100,24 +61,6 @@ export default function ImageCanvas() {
         ];  
     };
 
-    function scaledPoint(point) {
-        return {
-            x: point.x * point.x_scale,
-            y: point.y * point.y_scale,
-            image_index: point.image_index
-        }
-    }
-
-    async function getImageDimensions(src) {
-        return new Promise (function (resolved, _) {
-          let image = new Image()
-          image.onload = () => {
-            resolved({width: image.width, height: image.height})
-          };
-          image.src = src
-        })
-      }
-
     function setLinesColor(color) {
         colorsContext.set({point: colors.point, line: color})
     }
@@ -127,7 +70,7 @@ export default function ImageCanvas() {
     }
 
     function setCanvasData(lines, points, markedPoints) {
-        canvasContext.set({lines: lines, points: points, markedPoints: markedPoints})
+        manualDataContext.set({lines: lines, points: points, markedPoints: markedPoints})
     }
     
 

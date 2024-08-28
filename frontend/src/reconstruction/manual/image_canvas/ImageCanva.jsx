@@ -1,18 +1,18 @@
 import {useRef, useEffect, useContext, useState, useSyncExternalStore, useCallback } from 'react';
-import { XRaysStoreContext, ColorsStoreContext, CanvasStoreContext } from '../manualStore';
+import { XRaysStoreContext, ColorsStoreContext, ManualDataStoreContext } from '../manualStore';
 
 export default function ImageCanva({ ix, pointSetEv,  }) {
     const xraysContext = useContext(XRaysStoreContext)
-    const canvasContext = useContext(CanvasStoreContext)
+    const manualDataContext = useContext(ManualDataStoreContext)
     const colorsContext = useContext(ColorsStoreContext)
     const xrays = useSyncExternalStore(xraysContext.subscribe(), xraysContext.get())
     const colors = useSyncExternalStore(colorsContext.subscribe(), colorsContext.get())
-    const canvasData = useSyncExternalStore(canvasContext.subscribe(), canvasContext.get())
+    const manualData = useSyncExternalStore(manualDataContext.subscribe(), manualDataContext.get())
     const current = xrays[ix]
     const pointColor = colors.point
     const lineColor = colors.line
-    const point = canvasData.points[ix]
-    const line = canvasData.lines[ix]
+    const point = manualData.points[ix]
+    const line = manualData.lines[ix]
 
     const canvasRef = useRef(null);
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });

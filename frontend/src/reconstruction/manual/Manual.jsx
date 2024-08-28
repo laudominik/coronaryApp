@@ -2,8 +2,9 @@ import { useContext, useSyncExternalStore } from "react";
 import ImageList from '../image_list/ImageList';
 import ImageCanvas from './image_canvas/ImageCanvas';
 import AddImageButton from '../image_list/AddImageButton';
-import StartReconstructionButton from '../image_list/StartReconstructionButton';    
+import CreateBifurcationPointButton from "./CreateBifurcationPointButton";
 import { ManualErrorStoreContext, XRaysStoreContext } from './manualStore';
+import ClearBifurcationPointsButton from "./ClearBifurcationPointsButton.jsx";
 
 
 export default function Manual() {
@@ -23,7 +24,8 @@ export default function Manual() {
                 }
                 <div className='utils__container utils__reconstruction-buttons-wrapper'>
                     <AddImageButton />
-                    <StartReconstructionButton />
+                    <CreateBifurcationPointButton />
+                    <ClearBifurcationPointsButton />
                 </div>
                 <ImageCanvas />
                 <ImageList xraysContext={xraysContext} />
