@@ -103,6 +103,29 @@ code {
   color: #BB0000;
 }
 
+.viewport__wrapper {
+  background-color: #EDEDED;
+  padding: 1rem 0;
+}
+
+.viewport__canvas-wrapper--fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.viewport__canvas-wrapper--not-fullscreen {
+  height: 50vh;
+  width: 60%;
+}
+
+.viewport__canvas {
+  background-color: #EDEDED;
+}
+
 @media screen and (max-width: 1150px) {
 
   .image-entry__form-params {

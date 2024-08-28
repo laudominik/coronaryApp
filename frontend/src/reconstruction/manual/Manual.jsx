@@ -5,12 +5,12 @@ import AddImageButton from '../image_list/AddImageButton';
 import CreateBifurcationPointButton from "./CreateBifurcationPointButton";
 import { ManualErrorStoreContext, XRaysStoreContext } from './manualStore';
 import ClearBifurcationPointsButton from "./ClearBifurcationPointsButton.jsx";
+import ManualViewport from "./ManualViewport.jsx";
 
 
 export default function Manual() {
 
     const xraysContext = useContext(XRaysStoreContext)
-
     const errorContext = useContext(ManualErrorStoreContext)
     const error = useSyncExternalStore(errorContext.subscribe(), errorContext.get())
     
@@ -18,6 +18,7 @@ export default function Manual() {
     return (
         <main>
             <center>
+                <ManualViewport />
                 {
                     error === "" ? <></> :
                         <span className="error__text"> ERROR: {error} </span>

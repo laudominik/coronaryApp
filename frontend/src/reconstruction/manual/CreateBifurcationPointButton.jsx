@@ -24,7 +24,7 @@ export default function CreateBifurcationPointButton() {
                 if(pointRequest.status !== 200) {
                     errorContext.set(`${pointBody.message} - ${pointBody.reason}`)
                 } else {
-                    bifurcationContext.set([...bifurcationPoints, {x: pointBody.x, y: pointBody.y, z: pointBody.z}])
+                    bifurcationContext.set([...bifurcationPoints, [pointBody.x, pointBody.y, pointBody.z]])
                     setCanvasData([], [], [])
                 }
             }
