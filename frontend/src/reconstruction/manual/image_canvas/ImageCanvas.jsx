@@ -4,7 +4,7 @@ import CanvasColorPicker from "./CanvasColorPicker";
 import { ManualErrorStoreContext, CanvasStoreContext, XRaysStoreContext, ColorsStoreContext } from "../manualStore";
 import config from "../../../config.json"
 
-export default function ImageCanvas({onReconstructionReady}) {
+export default function ImageCanvas() {
     const xraysContext = useContext(XRaysStoreContext)
     const errorContext = useContext(ManualErrorStoreContext)
     const canvasContext = useContext(CanvasStoreContext)
@@ -15,25 +15,27 @@ export default function ImageCanvas({onReconstructionReady}) {
 
     async function onPointSet(point) {
         errorContext.set("")
+        const markedPoint = canvasData.markedPoints?.[0]
+        console.log(canvasData.markedPoints)
         try {
-            if(canvasData.markedPoint == null || canvasData.markedPoint.image_index === point.image_index) {
+            if(canvasData.markedPoints?.length !== 1 || markedPoint?.image_index === point.image_index) {
                 const linesRequest = await sendLinesRequest(point)
                 const linesBody = await linesRequest.json()
                 if(linesRequest.status !== 200) {
                     errorContext.set(`${linesBody.message} - ${linesBody.reason}`)
                     clearAfterError()
-                    return;
+                } else {
+                    const childrenLines = getLinesForChildren(linesBody, point.image_index)
+                    const childrenPoints = getChildrenPoints([point])
+                    setCanvasData(childrenLines, childrenPoints, [point])
                 }
-                const childrenLines = getLinesForChildren(linesBody, point.image_index)
-                const childrenPoints = getChildrenPoints([point])
-                setCanvasData(childrenLines, childrenPoints, point)
             }
-            else if (!!canvasData.markedPoint) {
-                const childrenPoints = getChildrenPoints([canvasData.markedPoint, point])
-                setCanvasData([], childrenPoints, null)
-                onReconstructionReady({first: canvasData.markedPoint, second: point})
+            else if (canvasData.markedPoints?.length === 1) {
+                const childrenPoints = getChildrenPoints([markedPoint, point])
+                setCanvasData([], childrenPoints, [markedPoint, point])
             }
         } catch (e) {
+            console.log(point)
             errorContext.set("Backend error")
         }
     }
@@ -124,8 +126,8 @@ export default function ImageCanvas({onReconstructionReady}) {
         colorsContext.set({point: color, line: colors.line})
     }
 
-    function setCanvasData(lines, points, markedPoint) {
-        canvasContext.set({lines: lines, points: points, markedPoint: markedPoint})
+    function setCanvasData(lines, points, markedPoints) {
+        canvasContext.set({lines: lines, points: points, markedPoints: markedPoints})
     }
     
 

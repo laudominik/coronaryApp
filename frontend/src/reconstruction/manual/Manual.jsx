@@ -12,10 +12,6 @@ export default function Manual() {
 
     const errorContext = useContext(ManualErrorStoreContext)
     const error = useSyncExternalStore(errorContext.subscribe(), errorContext.get())
-
-    function onReconstructionReady(points) {
-
-    }
     
     // get points from child, possibility to restart
     return (
@@ -29,7 +25,7 @@ export default function Manual() {
                     <AddImageButton />
                     <StartReconstructionButton />
                 </div>
-                <ImageCanvas onReconstructionReady={onReconstructionReady} />
+                <ImageCanvas />
                 <ImageList xraysContext={xraysContext} />
             </center>
         </main>
