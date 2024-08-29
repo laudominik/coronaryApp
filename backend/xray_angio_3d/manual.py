@@ -41,7 +41,7 @@ def find_point(points_info, images_info: [XRayInfo]):
     """
     
     first_point, second_point = points_info[0], points_info[1]
-    first_image, second_image = __assign_images_to_labels_by_point(first_point, images_info)
+    first_image, second_image = images_info[first_point.image_index], images_info[second_point.image_index]
     first_source, second_source = first_image.source(), second_image.source()
     first_point_3d = first_image.shadow(np.array([(first_point.y, first_point.x)]))[0]
     second_point_3d = second_image.shadow(np.array([(second_point.y, second_point.x)]))[0]
@@ -61,13 +61,6 @@ def __extract_line_between_points(bifurcation_point, origin):
     line_multiplier = (bifurcation_point - origin) / number_of_mapped_points
     line = [origin + i * line_multiplier for i in range(number_of_mapped_points)]
     return line
-
-
-def __assign_images_to_labels_by_point(point_info, images_info):
-    if point_info.image_index == 0:
-        return images_info[0], images_info[1]
-    else:
-        return images_info[1], images_info[0]
 
 
 def __find_point_in_3d(F1, F2, P1, P2):
