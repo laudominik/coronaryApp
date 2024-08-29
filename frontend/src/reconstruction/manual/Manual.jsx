@@ -6,6 +6,7 @@ import CreateBifurcationPointButton from "./CreateBifurcationPointButton";
 import { ManualErrorStoreContext, XRaysStoreContext } from './manualStore';
 import ClearBifurcationPointsButton from "./ClearBifurcationPointsButton.jsx";
 import ManualViewport from "./ManualViewport.jsx";
+import ErrorNotifier from "../../error/ErrorNotifier.jsx";
 
 
 export default function Manual() {
@@ -30,6 +31,7 @@ export default function Manual() {
                 </div>
                 <ImageCanvas />
                 <ImageList xraysContext={xraysContext} />
+                <ErrorNotifier errorContext={errorContext} />
             </center>
         </main>
     )

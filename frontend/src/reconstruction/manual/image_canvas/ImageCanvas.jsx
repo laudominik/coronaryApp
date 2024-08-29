@@ -77,11 +77,11 @@ export default function ImageCanvas() {
     return (
         <div className="utils__container canvas">
             <div className="canvas__title">
-                <h2>Zaznacz dwa punkty na załadowanych zdjęciach</h2>
+                <h2>Mark two points on below images</h2>
             </div>
             <div className="canvas__color-pickers">
-                <CanvasColorPicker initColor={colors.line} onColorChanged={setLinesColor} title={"Kolor linii"} />
-                <CanvasColorPicker initColor={colors.point} onColorChanged={setPointsColor} title={"Kolor punktu"}/>
+                <CanvasColorPicker initColor={colors.line} onColorChanged={setLinesColor} title={"Lines color"} />
+                <CanvasColorPicker initColor={colors.point} onColorChanged={setPointsColor} title={"Points color"}/>
             </div>
             <div className="canvas__container">
             {
