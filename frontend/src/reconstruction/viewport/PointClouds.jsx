@@ -26,7 +26,7 @@ export function Bifurcations() {
 export function ManualBifurcations() {
     const bifurcationsContext = useContext(ManualBifurcationStoreContext)
     const bifurcations = useSyncExternalStore(bifurcationsContext.subscribe(), bifurcationsContext.get())
-    return <Cloud pcd={bifurcations} color='#ff00ff' />
+    return <Cloud pcd={bifurcations} color='#7c7602' />
 }
 
 export function ImageShadows() {
