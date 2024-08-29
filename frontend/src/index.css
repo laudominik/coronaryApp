@@ -105,14 +105,12 @@ code {
 
 .error-notifier__wrapper {
   display: flex;
-  border-radius: 50%;
   position: fixed;
   bottom: 10px;
   right: 10px;
   z-index: 100;
   width: 4em;
   height: 4em;
-  background-color: #bbbbbb;
   justify-content: center;
   align-items: center;
 }
@@ -121,6 +119,18 @@ code {
   font-size: 4rem;
   font-weight: 1000;
   color: #FF0000
+}
+
+.error-notifier__text:before {
+  content: '';
+  border-radius: 50%;
+  height: 4rem;
+  width: 4rem;
+  transform: translateY(25%);
+  background-color: rgba(70, 70, 70, 40%);
+  position: absolute;
+  left: 0;
+  z-index: -1;
 }
 
 .viewport__wrapper {
@@ -155,6 +165,14 @@ code {
 
 @media screen and (max-width: 650px) {
 
+  .utils__container {
+    width: 90%;
+  }
+
+  .error-notifier__wrapper {
+    display: none;
+  }
+  
   .image-entry__form-params {
     grid-template-columns: 1fr
   }
