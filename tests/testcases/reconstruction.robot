@@ -23,7 +23,7 @@ Run Generation
     Wait Until Generation Succeeds
 Load to automatic reconstruction
     Click Button    id:loadToAuto
-    Wait Until Location Contains    reconstruction
+    Wait Until Location Contains    automatic
 Run automatic reconstruction
     Click Button    id:startReconstruction
     Wait Until Reconstruction Succeeds
