@@ -1,6 +1,6 @@
 import { useContext, useState, useSyncExternalStore } from 'react';
 import { Button, Card } from 'react-bootstrap';
-import { ReconstructionErrorStoreContext, VesselStoreContext, SourcesStoreContext, CenterlineStoreContext, ShadowsStoreContext, XRaysStoreContext, BifurcationStoreContext, RectsStoreContext } from '../reconstructionStore';
+import { ReconstructionErrorStoreContext, VesselStoreContext, SourcesStoreContext, CenterlineStoreContext, ShadowsStoreContext, XRaysStoreContext, BifurcationStoreContext, RectsStoreContext } from '../automatic/automaticStore';
 import { faCube } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 

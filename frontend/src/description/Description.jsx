@@ -43,7 +43,6 @@ export default function Description() {
 
 function ModuleCard({index, type, href, children}){
     let titleContent, bodyContent, image;
-    console.log(children)
     React.Children.forEach(children, child => {
         if (child.type === ModuleCard.Title) {
             titleContent = child;

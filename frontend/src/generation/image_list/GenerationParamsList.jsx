@@ -20,7 +20,7 @@ import XRay from "../../xray";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import GenerationParams from "../generationParams";
-import { XRaysStoreContext } from "../../reconstruction/reconstructionStore";
+import { XRaysStoreContext } from "../../reconstruction/automatic/automaticStore";
 import { XRaysStoreContext as ManualStoreContext  } from "../../reconstruction/manual/manualStore";
 
 const TOO_FEW_GENERATED_IMGS_MSG = "to load images to reconstruction there has to be at least two images (generated)"
@@ -89,7 +89,7 @@ export default function GenerationParamsList() {
             return;
         }
         reconstructionXrayContext.set(params.xrays)
-        window.location.href = "reconstruction";
+        window.location.href = "automatic";
     }
 
     function handleLoadToManualReconstruction(){

@@ -2,7 +2,7 @@ import { useContext, useState, useSyncExternalStore } from 'react';
 import { Button, Card, Form, Collapse } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp, faMinus } from '@fortawesome/free-solid-svg-icons';
-import { XRaysStoreContext } from '../reconstructionStore';
+import { XRaysStoreContext } from '../automatic/automaticStore';
 
 const prettyNames = {
     'sid': 'Source-image distance',

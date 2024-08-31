@@ -2,7 +2,7 @@ import { useContext, useState, useSyncExternalStore } from 'react';
 import { Button, Card, Form, Collapse } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faChevronUp } from '@fortawesome/free-solid-svg-icons';
-import { XRaysStoreContext } from '../reconstructionStore';
+import { XRaysStoreContext } from '../automatic/automaticStore';
 import XRay from '../../xray';
 
 

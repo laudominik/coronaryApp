@@ -1,11 +1,12 @@
-import Viewport from "./viewport/Viewport";
-import ImageList from './image_list/ImageList';
+import Viewport from "../viewport/Viewport";
+import ImageList from '../image_list/ImageList';
 import { useContext, useSyncExternalStore } from 'react';
-import AddImageButton from './image_list/AddImageButton';
-import StartReconstructionButton from './image_list/StartReconstructionButton';
-import { ReconstructionErrorStoreContext, XRaysStoreContext } from './reconstructionStore';
+import AddImageButton from '../image_list/AddImageButton';
+import StartReconstructionButton from '../image_list/StartReconstructionButton';
+import { ReconstructionErrorStoreContext, XRaysStoreContext } from './automaticStore';
+import AutomaticViewport from "./AutomaticViewport";
 
-export default function Reconstruction() {
+export default function Automatic() {
 
     const xraysContext = useContext(XRaysStoreContext)
     const errorContext = useContext(ReconstructionErrorStoreContext)
@@ -14,7 +15,9 @@ export default function Reconstruction() {
     return (
         <main>
             <center>
-                <Viewport />
+
+               
+                <AutomaticViewport />
                 {
                     error === "" ? <></> :
                         <span className="error__text"> ERROR: {error} </span>
