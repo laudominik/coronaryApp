@@ -11,7 +11,7 @@ jobs:
       runs-on: ubuntu-latest
       steps:
         - name: Checkout repository
-          uses: actions/checkout@v2
+          uses: actions/checkout@v4
           with:
             submodules: 'true'
         - name: Setup app
@@ -31,7 +31,7 @@ jobs:
             export DISPLAY=:99; Xvfb :99 -screen 0 1920x1080x24 -ac -noreset & sleep 3
             python -m robot.run --outputdir results tests/
         - name: Publish test results
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v4
           with:
             name: robot-test-results
             path: results
