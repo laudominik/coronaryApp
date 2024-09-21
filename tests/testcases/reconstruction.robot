@@ -26,15 +26,20 @@ Load to automatic reconstruction
     Wait Until Location Contains    automatic
 Run automatic reconstruction
     Click Button    id:startReconstruction
-    Wait Until Reconstruction Succeeds
+    Wait Until Automatic Succeeds
 Back To Generator
     Go Back
     Wait Until Location Contains    generation
-# TODO: the same for manual
-# Load to manual reconstruction
-#     Click Button    id:loadToManual
-#     Wait Until Location Contains    manual
-#     Go Back
+Load to manual reconstruction
+    Click Button    id:loadToManual
+    Wait Until Location Contains    manual
+Run manual reconstruction
+    Setup Canvas Points
+    Click Button    id:createPoint
+    Wait Until Manual Succeeds
+Clear manual reconstruction
+    Click Button    id:clearPoints
+    Wait Until Manual Clears
 
 *** Keywords ***
 Setup Sids Sods
@@ -51,7 +56,7 @@ Wait Until Generation Succeeds
     Wait Until Page Contains Element    xpath://tr[@id='row_0']/td[@class='generated']
     Wait Until Page Contains Element    xpath://tr[@id='row_1']/td[@class='generated']
     Wait Until Page Contains Element    xpath://tr[@id='row_2']/td[@class='generated']
-Wait Until Reconstruction Succeeds
+Wait Until Automatic Succeeds
     Wait Until Keyword Succeeds    5 seconds    1 second    Reconstruction Keys Are Not Null
 Reconstruction Keys Are Not Null
     ${vessel val}=    Get Storage Item    vessel    sessionStorage
@@ -64,3 +69,14 @@ Reconstruction Keys Are Not Null
     Should Not Be Equal    ${shadows val}    ${None}
     Should Not Be Equal    ${centerlines val}    ${None}
     Should Not Be Equal    ${bifurcations val}    ${None}
+Setup Canvas Points
+Wait Until Manual Succeeds
+    Wait Until Keyword Succeeds    5 seconds    1 second    Manual Keys Are Not Null
+Wait Until Manual Clears
+    Wait Until Keyword Succeeds    5 seconds    1 second    Manual Keys Are Null
+Manual Keys Are Not Null
+    ${bifurcations val}=    Get Storage Item    manual_points    sessionStorage
+    Should Not Be Equal    ${bifurcations val}    ${[]}
+Manual Keys Are Null
+    ${bifurcations val}=    Get Storage Item    manual_points    sessionStorage
+    Should Be Equal    ${bifurcations val}    []

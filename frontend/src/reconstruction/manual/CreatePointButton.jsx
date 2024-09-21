@@ -48,7 +48,7 @@ export default function CreatePointButton() {
         >
             <Card.Header>
                 <div>
-                    <Button className='border-0 bg-transparent' >
+                    <Button id="createPoint" className='border-0 bg-transparent' >
                         <FontAwesomeIcon className="iconInCard" icon={faCube} />
                     </Button>
                 </div>

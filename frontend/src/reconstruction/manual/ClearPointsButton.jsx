@@ -22,7 +22,7 @@ export default function ClearBifurcationPointsButton() {
         >
             <Card.Header>
                 <div>
-                    <Button className='border-0 bg-transparent' >
+                    <Button id="clearPoints" className='border-0 bg-transparent' >
                         <FontAwesomeIcon className="iconInCard" icon={faX} />
                     </Button>
                 </div>
