@@ -1,6 +1,6 @@
-import Store from "../store";
+import Store from "../../store";
 import { createContext } from "react";
-import XRay from "../xray";
+import XRay from "../../xray";
 
 // input
 const XRaysStoreContext = createContext(new Store([new XRay(), new XRay()], "xrays"))

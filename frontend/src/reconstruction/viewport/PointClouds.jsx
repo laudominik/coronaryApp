@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useSyncExternalStore } from "react";
 import * as THREE from 'three';
-import { CenterlineStoreContext, ShadowsStoreContext, SourcesStoreContext, VesselStoreContext, BifurcationStoreContext } from "../reconstructionStore";
-import { ManualBifurcationStoreContext } from "../manual/manualStore";
+import { CenterlineStoreContext, ShadowsStoreContext, SourcesStoreContext, VesselStoreContext, BifurcationStoreContext } from "../automatic/automaticStore";
+import { ManualPointsStoreContext } from "../manual/manualStore";
 
 const POINT_SIZE = 5.0;
 
@@ -23,10 +23,10 @@ export function Bifurcations() {
     return <Cloud pcd={bifurcations} color='#ff00ff' />
 }
 
-export function ManualBifurcations() {
-    const bifurcationsContext = useContext(ManualBifurcationStoreContext)
-    const bifurcations = useSyncExternalStore(bifurcationsContext.subscribe(), bifurcationsContext.get())
-    return <Cloud pcd={bifurcations} color='#7c7602' />
+export function ManualPoints() {
+    const pointsContext = useContext(ManualPointsStoreContext)
+    const points = useSyncExternalStore(pointsContext.subscribe(), pointsContext.get())
+    return <Cloud pcd={points} color='#ff00ff' />
 }
 
 export function ImageShadows() {

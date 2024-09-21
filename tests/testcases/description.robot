@@ -10,7 +10,7 @@ Open Browser To Description Page
     Element Text Should Be    id:pageTitle    3D X-ray angiography
 Open Automatic Page
     Click Element    id:go_button_0
-    Wait Until Location Contains    reconstruction
+    Wait Until Location Contains    automatic
     Go Back
 Open Manual Page
     Click Element    id:go_button_1

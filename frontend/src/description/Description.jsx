@@ -15,7 +15,7 @@ export default function Description() {
             <div className='album py-5 bg-light'>
                 <Container>
                 <Row>
-                    <ModuleCard index={0} type="reconstruction" href="/reconstruction">
+                    <ModuleCard index={0} type="reconstruction" href="/automatic">
                         <ModuleCard.Image src="voxels.jpg"/> 
                         <ModuleCard.Title>Automatic</ModuleCard.Title>
                         <ModuleCard.Body>Automatic reconstruction of heart point-cloud from images. User can specify multiple
@@ -43,7 +43,6 @@ export default function Description() {
 
 function ModuleCard({index, type, href, children}){
     let titleContent, bodyContent, image;
-    console.log(children)
     React.Children.forEach(children, child => {
         if (child.type === ModuleCard.Title) {
             titleContent = child;

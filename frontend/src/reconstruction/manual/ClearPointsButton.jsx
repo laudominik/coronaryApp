@@ -2,10 +2,10 @@ import { useContext } from 'react';
 import { Button, Card } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faX } from '@fortawesome/free-solid-svg-icons';
-import { ManualBifurcationStoreContext} from './manualStore';
+import { ManualPointsStoreContext} from './manualStore';
 
 export default function ClearBifurcationPointsButton() {
-    const bifurcationContext = useContext(ManualBifurcationStoreContext)
+    const bifurcationContext = useContext(ManualPointsStoreContext)
 
     async function onButtonClicked() {
         bifurcationContext.set([])

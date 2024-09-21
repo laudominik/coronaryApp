@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { useContext, useEffect, useRef, useSyncExternalStore } from "react"
-import { RectsStoreContext, ShadowsStoreContext, SourcesStoreContext } from "../reconstructionStore"
+import { RectsStoreContext, ShadowsStoreContext, SourcesStoreContext } from "./automaticStore"
 
 export function Rays() {
     const SUBSAMPLING = 1000

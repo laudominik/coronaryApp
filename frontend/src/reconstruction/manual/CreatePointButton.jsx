@@ -2,18 +2,18 @@ import { useContext, useSyncExternalStore } from 'react';
 import { Button, Card } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCube } from '@fortawesome/free-solid-svg-icons';
-import { ManualBifurcationStoreContext, ManualDataStoreContext, ManualErrorStoreContext, XRaysStoreContext } from './manualStore';
+import { ManualPointsStoreContext, ManualDataStoreContext, ManualErrorStoreContext, XRaysStoreContext } from './manualStore';
 import { sendPointRequest } from './manualService';
 
 
-export default function CreateBifurcationPointButton() {
+export default function CreatePointButton() {
     const errorContext = useContext(ManualErrorStoreContext)
     const xraysContext = useContext(XRaysStoreContext)
-    const bifurcationContext = useContext(ManualBifurcationStoreContext)
+    const pointsContext = useContext(ManualPointsStoreContext)
     const manualDataContext = useContext(ManualDataStoreContext)
     const xrays = useSyncExternalStore(xraysContext.subscribe(), xraysContext.get())
     const manualData = useSyncExternalStore(manualDataContext.subscribe(), manualDataContext.get())
-    const bifurcationPoints = useSyncExternalStore(bifurcationContext.subscribe(), bifurcationContext.get())
+    const points = useSyncExternalStore(pointsContext.subscribe(), pointsContext.get())
 
     async function onButtonClicked() {
         errorContext.set("")
@@ -24,7 +24,7 @@ export default function CreateBifurcationPointButton() {
                 if(pointRequest.status !== 200) {
                     errorContext.set(`${pointBody.message} - ${pointBody.reason}`)
                 } else {
-                    bifurcationContext.set([...bifurcationPoints, [pointBody.x, pointBody.y, pointBody.z]])
+                    pointsContext.set([...points, [pointBody.x, pointBody.y, pointBody.z]])
                     setCanvasData([], [], [])
                 }
             }
