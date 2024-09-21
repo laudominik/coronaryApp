@@ -5,7 +5,6 @@ import CreatePointButton from "./CreatePointButton.jsx";
 import { ManualErrorStoreContext, XRaysStoreContext } from './manualStore';
 import ClearPointsButton from "./ClearPointsButton.jsx";
 import ImageCanvasContainer from "./image_canvas/ImageCanvasContainer.jsx";
-import Viewport from "../viewport/Viewport.jsx";
 import ManualViewport from "./ManualViewport.jsx";
 import ErrorNotifier from "../../error/ErrorNotifier.jsx";
 
@@ -27,7 +26,7 @@ export default function Manual() {
                         <span className="error__text"> ERROR: {error} </span>
                 }
                 <div className='utils__container utils__reconstruction-buttons-wrapper'>
-                    <AddImageButton />
+                    <AddImageButton xraysContext={xraysContext} />
                     <CreatePointButton />
                     <ClearPointsButton />
                 </div>

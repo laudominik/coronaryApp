@@ -22,6 +22,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import GenerationParams from "../generationParams";
 import { XRaysStoreContext } from "../../reconstruction/automatic/automaticStore";
 import { XRaysStoreContext as ManualStoreContext  } from "../../reconstruction/manual/manualStore";
+import ErrorNotifier from "../../error/ErrorNotifier.jsx";
 
 const TOO_FEW_GENERATED_IMGS_MSG = "to load images to reconstruction there has to be at least two images (generated)"
 
@@ -163,6 +164,7 @@ export default function GenerationParamsList() {
                     </MDBCol>
                 </MDBRow>
             </MDBContainer>
+            <ErrorNotifier errorContext={errorContext} />
         </section>
     );
 }
