@@ -34,7 +34,11 @@ Load to manual reconstruction
     Click Button    id:loadToManual
     Wait Until Location Contains    manual
 Run manual reconstruction
-    Setup Canvas Points
+    Scroll Element Into View    id=imageCanvas0
+    Click On Canva At Coordinates    imageCanvas0    150    100
+    Scroll Element Into View    id=imageCanvas1
+    Click On Canva At Coordinates    imageCanvas1    150    150
+    Scroll Element Into View    id=createPoint
     Click Button    id:createPoint
     Wait Until Manual Succeeds
 Clear manual reconstruction
@@ -69,7 +73,9 @@ Reconstruction Keys Are Not Null
     Should Not Be Equal    ${shadows val}    ${None}
     Should Not Be Equal    ${centerlines val}    ${None}
     Should Not Be Equal    ${bifurcations val}    ${None}
-Setup Canvas Points
+Click On Canva At Coordinates
+    [Arguments]    ${id}    ${x}    ${y}
+    Click Element At Coordinates    id=${id}    ${x}    ${y}
 Wait Until Manual Succeeds
     Wait Until Keyword Succeeds    5 seconds    1 second    Manual Keys Are Not Null
 Wait Until Manual Clears

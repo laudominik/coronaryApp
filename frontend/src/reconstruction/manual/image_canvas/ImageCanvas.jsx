@@ -74,6 +74,7 @@ export default function ImageCanvas({ ix, pointSetEv,  }) {
         <section>
             <canvas
                 ref={canvasRef}
+                id={`imageCanvas${ix}`}
                 className="canva"
                 width={400}
                 height={500}
