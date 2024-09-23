@@ -52,7 +52,6 @@ function ModuleCard({index, type, href, children}){
             image = child;
         }
     });
-    console.log(image)
     return (
         <Col md={4} key={index}>
             <Card className='mb-4 shadow-sm h-100'>

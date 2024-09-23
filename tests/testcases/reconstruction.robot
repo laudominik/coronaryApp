@@ -34,11 +34,14 @@ Load to manual reconstruction
     Click Button    id:loadToManual
     Wait Until Location Contains    manual
 Run manual reconstruction
-    Scroll Element Into View    id=imageCanvas0
+    Execute JavaScript    window.document.evaluate("//canvas[@id='imageCanvas0']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true);
+    Wait Until Element Is Visible    xpath=//canvas[@id='imageCanvas0']
     Click On Canva At Coordinates    imageCanvas0    150    100
-    Scroll Element Into View    id=imageCanvas1
+    Execute JavaScript    window.document.evaluate("//canvas[@id='imageCanvas1']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true);
+    Wait Until Element Is Visible    xpath=//canvas[@id='imageCanvas1']
     Click On Canva At Coordinates    imageCanvas1    150    150
-    Scroll Element Into View    id=createPoint
+    Execute JavaScript    window.document.evaluate("//*[@id='viewport']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true);
+    Wait Until Element Is Visible    xpath=//*[@id='viewport']
     Click Button    id:createPoint
     Wait Until Manual Succeeds
 Clear manual reconstruction
@@ -82,7 +85,7 @@ Wait Until Manual Clears
     Wait Until Keyword Succeeds    5 seconds    1 second    Manual Keys Are Null
 Manual Keys Are Not Null
     ${bifurcations val}=    Get Storage Item    manual_points    sessionStorage
-    Should Not Be Equal    ${bifurcations val}    ${[]}
+    Should Not Be Equal    ${bifurcations val}    []
 Manual Keys Are Null
     ${bifurcations val}=    Get Storage Item    manual_points    sessionStorage
     Should Be Equal    ${bifurcations val}    []

@@ -10,9 +10,8 @@ import { Rays, Screens } from '../automatic/Screens';
 const { DEG2RAD } = THREE.MathUtils
 
 export default function Viewport(body /* crappy, but don't have better idea for now */, fullscreen) {
-    console.log(body)
     return (
-        <section className='viewport__wrapper'>
+        <section className='viewport__wrapper' id="viewport">
             <div className={body.fullscreen ? 'viewport__canvas-wrapper--fullscreen' : 'viewport__canvas-wrapper--not-fullscreen'}>
                 <Canvas shadows camera={{ position: [0, 0, 0.1], fov: 100, near: 0.001 }} className='viewport__canvas'>
                     {body.children ?? <></>}

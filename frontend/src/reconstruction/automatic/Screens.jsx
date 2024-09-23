@@ -46,7 +46,6 @@ export function Screens() {
     const bufferRef = useRef()
     const rectsContext = useContext(RectsStoreContext)
     const rects = useSyncExternalStore(rectsContext.subscribe(), rectsContext.get())
-    console.log("rects", rects)
     useEffect(() => {
         if (bufferRef.current) {
             const vertices = []
