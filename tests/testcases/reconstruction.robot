@@ -36,12 +36,15 @@ Load to manual reconstruction
 Run manual reconstruction
     Execute JavaScript    window.document.evaluate("//canvas[@id='imageCanvas0']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true);
     Wait Until Element Is Visible    xpath=//canvas[@id='imageCanvas0']
-    Click On Canva At Coordinates    imageCanvas0    150    100
+    Sleep   1s
+    Click On Canva At Coordinates    imageCanvas0    150    400
     Execute JavaScript    window.document.evaluate("//canvas[@id='imageCanvas1']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true);
     Wait Until Element Is Visible    xpath=//canvas[@id='imageCanvas1']
-    Click On Canva At Coordinates    imageCanvas1    150    150
+    Sleep   1s
+    Click On Canva At Coordinates    imageCanvas1    150    400
     Execute JavaScript    window.document.evaluate("//*[@id='viewport']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true);
     Wait Until Element Is Visible    xpath=//*[@id='viewport']
+    Sleep   1s
     Click Button    id:createPoint
     Wait Until Manual Succeeds
 Clear manual reconstruction
