@@ -7,9 +7,9 @@ export default function BrandNav() {
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="me-auto">
-          <Nav.Link href="reconstruction">Reconstruction</Nav.Link>
-          <Nav.Link href="generation">Generation</Nav.Link>
+          <Nav.Link href="automatic">Automatic</Nav.Link>
           <Nav.Link href="manual">Manual</Nav.Link>
+          <Nav.Link href="generation">Generation</Nav.Link>
         </Nav>
       </Navbar.Collapse>
     </Container>

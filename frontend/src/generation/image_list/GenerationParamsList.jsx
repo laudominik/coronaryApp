@@ -20,7 +20,11 @@ import XRay from "../../xray";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import GenerationParams from "../generationParams";
-import { XRaysStoreContext } from "../../reconstruction/reconstructionStore";
+import { XRaysStoreContext } from "../../reconstruction/automatic/automaticStore";
+import { XRaysStoreContext as ManualStoreContext  } from "../../reconstruction/manual/manualStore";
+import ErrorNotifier from "../../error/ErrorNotifier.jsx";
+
+const TOO_FEW_GENERATED_IMGS_MSG = "to load images to reconstruction there has to be at least two images (generated)"
 
 export default function GenerationParamsList() {
     const [disabled, setDisabled] = useState(false)
@@ -31,6 +35,7 @@ export default function GenerationParamsList() {
 
     // reconstruction!
     const reconstructionXrayContext = useContext(XRaysStoreContext)
+    const manualXrayContext = useContext(ManualStoreContext)
 
     async function generate() {
         if (disabled) return;
@@ -47,7 +52,7 @@ export default function GenerationParamsList() {
         try {
             const response = await responseAsync
             const jso = await response.json()
-            if (jso.status == 0) {
+            if (jso.status == 200) {
                 errorContext.set("")
                 const result = jso.xrays.map(el => JSON.parse(el))
                 const newParams = structuredClone(params)
@@ -75,15 +80,26 @@ export default function GenerationParamsList() {
         paramsContext.set(newParams)
     }
 
-    function handleLoadToReconstruction(){
-        const generatedCount = params.xrays.reduce((acc, el) => el.generated ? acc + 1 : acc, 0)
-        console.log(generatedCount)
-        if(generatedCount < 2){
-            errorContext.set("to load images to reconstruction there has to be at least two images (generated)")
-            return ;
+    function canLoadToReconstruction(){
+        return params.xrays.reduce((acc, el) => el.generated ? acc + 1 : acc, 0) >= 2;
+    }
+
+    function handleLoadToAutoReconstruction(){
+        if(!canLoadToReconstruction()){
+            errorContext.set(TOO_FEW_GENERATED_IMGS_MSG)
+            return;
         }
         reconstructionXrayContext.set(params.xrays)
-        window.location.href = "reconstruction";
+        window.location.href = "automatic";
+    }
+
+    function handleLoadToManualReconstruction(){
+        if(!canLoadToReconstruction()){
+            errorContext.set(TOO_FEW_GENERATED_IMGS_MSG)
+            return;
+        }
+        manualXrayContext.set(params.xrays)
+        window.location.href = "manual";
     }
 
     const buttonStyle = {
@@ -98,14 +114,15 @@ export default function GenerationParamsList() {
                     <MDBCol lg="9" xl="7">
                         <MDBCard className="rounded-3">
                             <MDBCardBody className="p-4">
-                                <h4 className="text-center my-3 pb-3">X-ray generation</h4>
+                                <h4 id='pageTitle' className="text-center my-3 pb-3">X-ray generation</h4>
                                 {
                                     error == "" ? <></> :
                                         <span style={{ color: 'red' }}> ERROR: {error} </span>
                                 }
                                 <br />
-                                <Button variant="success" style={buttonStyle} onClick={generate}>Generate</Button>
-                                <Button variant="warning" style={buttonStyle} onClick={handleLoadToReconstruction}>Load to reconstruction</Button>
+                                <Button id="startGeneration" variant="success" style={buttonStyle} onClick={generate}>Generate</Button> <br/>
+                                <Button id="loadToAuto" variant="warning" style={buttonStyle} onClick={handleLoadToAutoReconstruction}>Load to <b>automatic</b> reconstruction</Button>
+                                <Button id="loadToManual" variant="danger" style={buttonStyle} onClick={handleLoadToManualReconstruction}>Load to <b>manual</b> reconstruction</Button>
                                 {/* <Form>
                                     <Form.Group>
                                         <center>
@@ -135,7 +152,7 @@ export default function GenerationParamsList() {
                                         <tr>
                                             <td colSpan={7}>
                                                 <center>
-                                                    <Button onClick={addProjection}><FontAwesomeIcon icon={faPlus} /></Button>
+                                                    <Button id="addButton" onClick={addProjection}><FontAwesomeIcon icon={faPlus} /></Button>
                                                 </center>
                                             </td>
                                         </tr>
@@ -147,6 +164,7 @@ export default function GenerationParamsList() {
                     </MDBCol>
                 </MDBRow>
             </MDBContainer>
+            <ErrorNotifier errorContext={errorContext} />
         </section>
     );
 }

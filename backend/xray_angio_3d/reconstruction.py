@@ -8,12 +8,23 @@ from .filters import filt, filt_closest
 from .util import construct_cube, skeletonize
 from .bifurcations import remove_duplicates_and_round_points, generate_clique_graph, minimum_spanning_tree, extract_possible_idxs_from_mst, filter_bifurcation_points
 
+MAX_RETURN_PTS = 30000
 
-def reconstruction(xrays: [XRayInfo], type='automatic'):
-    '''
+def reconstruction(xrays: [XRayInfo]):
+    """
+    the function performs automatic reconstruction using voxel hull based algorithm
+    for a given set of xrays
+
     :param xrays: x ray images to run reconstruction on
-    :param type: what method to use, 'automatic' is the inverse raytracing, 'manual' is Kalmykova's method
-    '''
+    :return: A dictionary containing various reconstructed components of the vessel, including:
+        - **vessel** (*list*): A list representing the reconstructed 3D vessel point cloud data.
+        - **bifurcations** (*list*): A list representing the bifurcation points within the vessel.
+        - **centerlines** (*list*): A list representing the centerlines of the vessel structure.
+        - **sources** (*list*): A list of source points derived from the X-ray data.
+        - **shadows** (*list*): A list of shadow points derived from the X-ray data.
+        - **rects** (*list*): A list of projection rectangles calculated
+
+    """
 
     sod_max = max(xray.acquisition_params['sod'] for xray in xrays)
     sid_min = min(xray.acquisition_params['sid'] for xray in xrays)
@@ -28,7 +39,6 @@ def reconstruction(xrays: [XRayInfo], type='automatic'):
     shadows = __get_shadows(xrays)
     rects = __get_projection_rects(xrays)
 
-    # TODO: subsample from it so that we do not send too much points to frontend
     return {
         'vessel': vessel.tolist(),
         'bifurcations': bifurcations.tolist(),
@@ -39,13 +49,22 @@ def reconstruction(xrays: [XRayInfo], type='automatic'):
     }
 
 
+def __subsample(pts):
+    """
+    sample from array arr to make it equal to the size of target_length
+    """
+    if pts.shape[0] < MAX_RETURN_PTS: return pts
+    ixes = sorted(np.random.choice(pts.shape[0], MAX_RETURN_PTS, replace=False))
+    return pts[ixes, :]
+
+
 def __get_vessel(radius, xrays):
     vessel = construct_cube(radius, dimension=100)
     for xray in xrays:
         image = xray.image
         proj = np.transpose(np.nonzero(image))
         vessel = filt(vessel, proj, xray)
-    return vessel
+    return __subsample(vessel)
 
 
 def __get_centerlines(vessel, xrays):
@@ -54,7 +73,7 @@ def __get_centerlines(vessel, xrays):
         skel =  skeletonize(xray.image.astype(np.uint8))
         proj = np.transpose(np.nonzero(skel))
         centerlines = filt_closest(centerlines, proj, xray)
-    return centerlines
+    return __subsample(centerlines)
 
 
 def __get_bifurcations(centerlines):
@@ -63,7 +82,7 @@ def __get_bifurcations(centerlines):
     mst = minimum_spanning_tree(clique).toarray()
     bifurcation_idxs = extract_possible_idxs_from_mst(mst)
     bifurcation_idxs = filter_bifurcation_points(mst, bifurcation_idxs)
-    return centerlines[bifurcation_idxs]
+    return __subsample(centerlines[bifurcation_idxs])
 
 
 def __get_sources(xrays):

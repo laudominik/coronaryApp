@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useSyncExternalStore } from "react";
 import * as THREE from 'three';
-import { CenterlineStoreContext, ShadowsStoreContext, SourcesStoreContext, VesselStoreContext, BifurcationStoreContext } from "../reconstructionStore";
-import { faL } from "@fortawesome/free-solid-svg-icons";
+import { CenterlineStoreContext, ShadowsStoreContext, SourcesStoreContext, VesselStoreContext, BifurcationStoreContext } from "../automatic/automaticStore";
+import { ManualPointsStoreContext } from "../manual/manualStore";
 
 const POINT_SIZE = 5.0;
 
@@ -21,6 +21,12 @@ export function Bifurcations() {
     const bifurcationsContext = useContext(BifurcationStoreContext)
     const bifurcations = useSyncExternalStore(bifurcationsContext.subscribe(), bifurcationsContext.get())
     return <Cloud pcd={bifurcations} color='#ff00ff' />
+}
+
+export function ManualPoints() {
+    const pointsContext = useContext(ManualPointsStoreContext)
+    const points = useSyncExternalStore(pointsContext.subscribe(), pointsContext.get())
+    return <Cloud pcd={points} color='#ff00ff' />
 }
 
 export function ImageShadows() {

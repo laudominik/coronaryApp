@@ -1,0 +1,40 @@
+name: Build and test
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+
+jobs:
+    Run-Test:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+          with:
+            submodules: 'true'
+        - name: Setup app
+          run: |
+            sudo apt update && sudo apt install docker docker-compose xvfb -y
+            sudo docker-compose -f compose-prod.yml up -d  
+        - name: Setup Python
+          uses: actions/setup-python@v5.0.0
+          with:
+            python-version: 3.11.9
+        - name: Install pip dependencies
+          run: |
+            pip install --upgrade robotframework-seleniumlibrary
+            pip install robotframework-seleniumtestability
+        - name: Run Test
+          run: |
+            export DISPLAY=:99; Xvfb :99 -screen 0 1920x1080x24 -ac -noreset & sleep 3
+            python -m robot.run --outputdir results tests/
+        - name: Publish test results
+          uses: actions/upload-artifact@v4
+          with:
+            name: robot-test-results
+            path: results
+        - name: Stop containers
+          if: always()
+          run: docker-compose -f compose-prod.yml down

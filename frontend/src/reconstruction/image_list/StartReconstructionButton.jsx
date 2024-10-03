@@ -1,6 +1,6 @@
 import { useContext, useState, useSyncExternalStore } from 'react';
 import { Button, Card } from 'react-bootstrap';
-import { ReconstructionErrorStoreContext, VesselStoreContext, SourcesStoreContext, CenterlineStoreContext, ShadowsStoreContext, XRaysStoreContext, BifurcationStoreContext, RectsStoreContext } from '../reconstructionStore';
+import { ReconstructionErrorStoreContext, VesselStoreContext, SourcesStoreContext, CenterlineStoreContext, ShadowsStoreContext, XRaysStoreContext, BifurcationStoreContext, RectsStoreContext } from '../automatic/automaticStore';
 import { faCube } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -24,7 +24,7 @@ export default function StartReconstructionButton() {
     async function handleStart() {
         if (disabled) return;
         setDisabled(true)
-        const url = config["RECONSTRUCTION_ENDPOINT"]
+        const url = config["AUTO_RECONSTRUCTION_ENDPOINT"]
         const responseAsync = fetch(url, {
             method: 'POST',
             body: xraysContext.serialized(),
@@ -37,7 +37,7 @@ export default function StartReconstructionButton() {
             const response = await responseAsync
             const jso = await response.json()
 
-            if (jso.status == 0) {
+            if (jso.status == 200) {
                 vesselContext.set(jso.vessel)
                 shadowsContext.set(jso.shadows)
                 centerlineContext.set(jso.centerlines)
@@ -65,7 +65,7 @@ export default function StartReconstructionButton() {
             disabled={disabled} onClick={handleStart}>
             <Card.Header>
                 <div>
-                    <Button className='border-0 bg-transparent' disabled={disabled}>
+                    <Button id="startReconstruction" className='border-0 bg-transparent' disabled={disabled}>
                         <FontAwesomeIcon className="iconInCard" icon={faCube} />
                     </Button>
                 </div>

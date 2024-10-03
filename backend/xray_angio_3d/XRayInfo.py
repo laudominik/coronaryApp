@@ -4,6 +4,15 @@ from .util import calc_rotational_matrix, rotate_points
 
 
 class XRayInfo:
+    """
+    class representing one projection
+
+    :param width: image width
+    :param height: image height
+    :param filename: image filename
+    :param image: image itself
+    :param acquisition_params: dict containing parameters through which the position of C-arm can be deduced
+    """
     def __init__(self):
         self.acquisition_params = {
             'sid': 0,
@@ -20,6 +29,9 @@ class XRayInfo:
         self.image = []
 
     def source(self):
+        """
+        method returns xray source for the XRayInfo
+        """
         alpha, beta = self.__angles_rad()
         sod = self.acquisition_params['sod']
 
@@ -31,6 +43,9 @@ class XRayInfo:
         return np.deg2rad(self.acquisition_params['alpha']), np.deg2rad(self.acquisition_params['beta'])
 
     def shadow(self, img_points=None):
+        """
+        method returns shadow (projected points embedded in R^3) for the XRayInfo
+        """
         alpha, beta = self.__angles_rad()
         sid = self.acquisition_params['sid']
         sod = self.acquisition_params['sod']
@@ -65,6 +80,10 @@ class XRayInfo:
         return shadow_points[:, :-1]
 
     def projection_rect(self):
+        """
+        method returns bounding rect of projection screen for the XRayInfo
+        """
+        
         return self.shadow(
             np.array(
                 [

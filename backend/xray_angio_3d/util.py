@@ -12,8 +12,7 @@ def construct_cube(radius, dimension=100):
 
 
 def skeletonize(img):
-    skel = cv_algorithms.guo_hall(img) 
-    #s, _, _ = pcv.morphology.prune(skel_img=skel, size=15)
+    skel = cv_algorithms.guo_hall(img)
     return skel
 
 

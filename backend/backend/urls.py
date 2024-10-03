@@ -1,24 +1,12 @@
-"""backend URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.contrib import admin
 from django.urls import path
-from reconstruction.views import reconstruction_worker, generator_worker
+from reconstruction.workers.auto_reconstruction_worker import *
+from reconstruction.workers.generation_worker import *
+from reconstruction.workers.manual_reconstruction_worker import *
+from reconstruction.workers.manual_lines_worker import *
 
 urlpatterns = [
-    #path('admin/', admin.site.urls),
-    path('reconstruction/', reconstruction_worker),
-    path("generation/", generator_worker)
+    path('auto', auto_reconstruction_worker),
+    path('manual', manual_reconstruction_worker),
+    path("generation/", generation_worker),
+    path("lines/", manual_lines_worker)
 ]
