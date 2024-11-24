@@ -52,17 +52,17 @@ export default function GenerationParamsList() {
         try {
             const response = await responseAsync
             const jso = await response.json()
-            if (jso.status == 200) {
+            if (response.status === 200) {
                 errorContext.set("")
                 const result = jso.xrays.map(el => JSON.parse(el))
                 const newParams = structuredClone(params)
                 newParams.xrays = result
                 paramsContext.set(newParams)
             } else {
-                errorContext.set(jso.msg)
+                errorContext.set(`${jso.message} - ${jso.reason}`)
             }
         } catch (e) {
-            errorContext.set("backend error")
+            errorContext.set("Backend error")
         } finally {
             setDisabled(false)
         }

@@ -9,7 +9,7 @@ from xray_angio_3d import XRayInfo
 
 GENERIC_MSG = "issue with reconstruction input"
 IMAGE_WRONG_SIZE_MSG = "one of the images has wrong size (should be grayscale)"
-IMAGE_MISSING_MSG = "one of the images missing"
+IMAGE_MISSING_MSG = "one of the images is missing"
 EMPTY_LIST = "empty xrays list"
 
 def parse_reconstruction_params(body):

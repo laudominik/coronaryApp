@@ -6,15 +6,14 @@ from reconstruction.parser import parse_reconstruction_params, parse_generation_
 @api_view(['POST'])
 def auto_reconstruction_worker(request):
     if request.method != 'POST':
-        return JsonResponse({"status": 400, "message": "Bad request", "reason": "Wrong method"})
+        return JsonResponse({"message": "Bad request", "reason": "Wrong method"}, status=400)
 
     xrays, msg = parse_reconstruction_params(request.body)
     if not xrays:
-        return JsonResponse({"status": 400, "message": msg})
+        return JsonResponse({"message": "Bad request", "reason": msg}, status=400)
 
     print("[RECONSTRUCTION] pending...")
     pts = reconstruction(xrays)
     print("[RECONSTRUCTION] done")
 
-    pts["status"] = 200
     return JsonResponse(pts)

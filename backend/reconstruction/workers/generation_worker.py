@@ -17,14 +17,14 @@ PIXEL_SPACING = 0.35 / 1000
 @api_view(['POST'])
 def generation_worker(request):
     _, xrays, msg = parse_generation_params(request.body)
-    if not xrays: return JsonResponse({"status": 1, "msg": msg})
+    if not xrays: return JsonResponse({"message": "Bad request", "reason": msg}, status=400)
     
     vessel =  __ensure_generate_vessel_3d()
 
     projected = map(lambda xray : __projection(xray, vessel), xrays)
     return JsonResponse({
-        "status": 200,
-        "xrays": [json.dumps(xray.__dict__) for xray in projected]
+        "xrays": [json.dumps(xray.__dict__) for xray in projected],
+        "message": "OK"
     })
 
 def __ensure_generate_vessel_3d():

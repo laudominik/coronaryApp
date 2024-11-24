@@ -4,13 +4,13 @@ of heart arteries from a series of planary x-ray images with known angles.
 
 # Running
 ```
-docker-compose up
+docker-compose -f compose-prod.yml up
 ```
 
 # Development environment
 Either run 
 ```
-docker-compose -f compose-dev.yml up
+docker-compose up
 ```
 or just simply run it locally.
 # Package installation

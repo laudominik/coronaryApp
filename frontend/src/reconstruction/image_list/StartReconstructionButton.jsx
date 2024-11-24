@@ -37,7 +37,7 @@ export default function StartReconstructionButton() {
             const response = await responseAsync
             const jso = await response.json()
 
-            if (jso.status == 200) {
+            if (response.status === 200) {
                 vesselContext.set(jso.vessel)
                 shadowsContext.set(jso.shadows)
                 centerlineContext.set(jso.centerlines)
@@ -46,10 +46,10 @@ export default function StartReconstructionButton() {
                 rectsContext.set(jso.rects)
                 errorContext.set("")
             } else {
-                errorContext.set(jso.msg)
+                errorContext.set(`${jso.message} - ${jso.reason}`)
             }
         } catch (e) {
-            errorContext.set("backend error")
+            errorContext.set("Backend error")
         } finally {
             setDisabled(false)
         }
